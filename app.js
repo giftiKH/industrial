@@ -14,6 +14,8 @@ const jwt = require("jsonwebtoken");
 const initializeServer = require("./initializer");
 const userRoutes = require("./routes/userRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
+const textbookRoutes = require('./routes/textbooks');
+const textbookRequestRoutes = require('./routes/textbookRequests');
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -21,6 +23,8 @@ app.use(express.json());
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/org", organizationRoutes); 
+app.use('/api/textbooks', textbookRoutes);
+app.use('/api/textbookRequests', textbookRequestRoutes);
 
 // Call initialization function when the server starts
 initializeServer()
