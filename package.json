@@ -4,9 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "client": "npm start --prefix front",
-    "dev": "concurrently \"nodemon app.js\" \"npm run client\""
+    "start": "nodemon app.js"
+   
   },
   "keywords": [],
   "author": "",
