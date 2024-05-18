@@ -112,3 +112,55 @@ exports.deleteRequest = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+
+// Evaluate a textbook request
+exports.evaluateRequest = async (req, res) => {
+  try {
+    const { status, evaluatedBy, comment, evaluationDate } = req.body;
+    const requestId = req.params.id;
+
+    const request = await TextbookRequest.findById(requestId);
+    if (!request) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    // Update evaluation fields
+    request.evaluation.status = status;
+    request.evaluation.evaluatedBy = evaluatedBy;
+    request.evaluation.comment = comment;
+    request.evaluation.evaluationDate = evaluationDate;
+
+    // Save the updated request
+    const updatedRequest = await request.save();
+
+    res.status(200).json(updatedRequest);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Get all textbook requests without evaluation
+exports.getAllRequestsWithoutEvaluation = async (req, res) => {
+  try {
+    const requests = await TextbookRequest.find({}, "-evaluation");
+    res.status(200).json(requests);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Get a textbook request by ID without evaluation
+exports.getRequestByIdWithoutEvaluation = async (req, res) => {
+  try {
+    const requestId = req.params.id;
+    const request = await TextbookRequest.findById(requestId, "-evaluation");
+    if (!request) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+    res.status(200).json(request);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

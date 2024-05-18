@@ -21,7 +21,11 @@ const textbookRequestSchema = new Schema({
       enum: ["accepted", "rejected", "not evaluated"],
       default: "not evaluated",
     },
-    evaluatedBy: { type: String, default: null },
+    evaluatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    }, // Reference to User model
     comment: { type: String, default: null },
     evaluationDate: { type: Date, default: null },
   },

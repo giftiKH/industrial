@@ -8,4 +8,11 @@ router.get('/:id', textbookRequestController.getRequestById);
 router.put('/:id', textbookRequestController.updateRequest);
 router.delete('/:id', textbookRequestController.deleteRequest);
 
+router.put("/requests/evaluate/:id", textbookRequestController.evaluateRequest);
+
+router.get('/requests', textbookRequestController.getAllRequestsWithoutEvaluation);
+
+router.get('/requests/:id', textbookRequestController.getRequestByIdWithoutEvaluation);
+
+
 module.exports = router;
