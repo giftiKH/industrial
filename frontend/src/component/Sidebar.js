@@ -1,30 +1,59 @@
 import React, { useState } from "react";
-import { List, ListItem, Collapse } from "@mui/material";
+import { List, ListItem, ListItemText, Collapse } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 
 const Sidebar = ({ userRole, onMenuItemClick }) => {
-  const [open, setOpen] = useState(false);
+  const [openMenus, setOpenMenus] = useState({});
+  const [selectedMenu, setSelectedMenu] = useState(null);
 
-  const handleClick = () => {
-    setOpen(!open);
+  const handleClick = (menuItemName) => {
+    setOpenMenus((prevOpenMenus) => ({
+      ...prevOpenMenus,
+      [menuItemName]: !prevOpenMenus[menuItemName],
+    }));
+  };
+
+  const handleMenuItemClick = (menuItemKey) => {
+    setSelectedMenu(menuItemKey);
+    onMenuItemClick(menuItemKey);
   };
 
   const menuItems = {
     "super-admin": [
-      //  { name: "Dashboard", key: "dashboard" },
-      { name: "Tasks", subMenus: [{ name: "Task 1", key: "task1" }] },
-      { name: "User Data", key: "userData", default: true },
-      { name: "School Data", key: "schoolData" },
-      { name: "Course Data", key: "courseData" },
+      {
+        name: "Users",
+        subMenus: [
+          { name: "All Users", key: "allUsers" },
+          { name: "AACEB", key: "AACEB" },
+          { name: "Sub-city", key: "subCity" },
+          { name: "schools", key: "schoolUsers" },
+        ],
+      },
+      { name: "Textbooks", key: "textbooks" },
+      {
+        name: "Organization",
+        subMenus: [
+          { name: "All", key: "allOrganizations" },
+          { name: "Sub-cities", key: "subCities" },
+          { name: "Schools", key: "schools" },
+        ],
+      },
     ],
     admin: [
+      { name: "School Request", key: "allRequest" },
+      {
+        name: "Users",
+        subMenus: [
+          { name: "All Users", key: "allUsers" },
+          { name: "Sub-city", key: "subCity" },
+          { name: "schools", key: "schoolUsers" },
+        ],
+      },
       { name: "Distribution Progres", key: "dis-progres" },
       { name: "Distribution Ratio", key: "dis-ratio", default: true },
-      { name: "School Request", key: "allRequest" },
       { name: "Distribution Schedule", key: "dis-schedule" },
-      { name: "TextBook", key: "TextBook" },
-      { name: "Tasks", subMenus: [{ name: "Task 1", key: "task1" }] },
+      { name: "Schools", key: "schools" },
     ],
     school: [
       { name: "Request Form", key: "requestForm", default: true },
@@ -41,11 +70,6 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
   };
 
   const userMenus = menuItems[userRole] || [];
-  const defaultMenuItem = userMenus.find((item) => item.default) || {};
-
-  const handleMenuItemClick = (menuItemKey) => {
-    onMenuItemClick(menuItemKey);
-  };
 
   return (
     <div
@@ -64,22 +88,42 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
               button
               onClick={
                 menuItem.subMenus
-                  ? handleClick
+                  ? () => handleClick(menuItem.name)
                   : () => handleMenuItemClick(menuItem.key)
               }
+              style={{
+                backgroundColor:
+                  selectedMenu === menuItem.key ? "#d3d3d3" : "inherit",
+              }}
             >
-              {menuItem.name}
-              {menuItem.subMenus && (open ? <ExpandLess /> : <ExpandMore />)}
+              <ListItemText primary={menuItem.name} />
+              {menuItem.subMenus && (
+                <>
+                  {openMenus[menuItem.name] ? (
+                    <ExpandLess style={{ marginLeft: "auto" }} />
+                  ) : (
+                    <ExpandMore style={{ marginLeft: "auto" }} />
+                  )}
+                </>
+              )}
             </ListItem>
             {menuItem.subMenus && (
-              <Collapse in={open} timeout="auto" unmountOnExit>
+              <Collapse
+                in={openMenus[menuItem.name]}
+                timeout="auto"
+                unmountOnExit
+              >
                 <List component="div" disablePadding>
                   {menuItem.subMenus.map((subMenu, subIndex) => (
                     <ListItem
                       key={subIndex}
                       button
                       onClick={() => handleMenuItemClick(subMenu.key)}
-                      style={{ paddingLeft: 30 }}
+                      style={{
+                        paddingLeft: 30,
+                        backgroundColor:
+                          selectedMenu === subMenu.key ? "#d3d3d3" : "inherit",
+                      }}
                     >
                       {subMenu.name}
                     </ListItem>

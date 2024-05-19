@@ -18,7 +18,7 @@ const DashboardPage = () => {
 
   // Ensure userInfo is not null or undefined before accessing its properties
   const userRole = userInfo && userInfo.role ? userInfo.role : "super-admin";
-
+  //const userRole = "super-admin";
   return (
     <div
       style={{

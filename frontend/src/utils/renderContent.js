@@ -1,26 +1,36 @@
 import React from "react";
-import UserTable from "../component/UserTable";
-import SchoolData from "../component/SchoolData";
-import CourseData from "../component/CourseData";
 import Request from "../component/school/Request";
 import Invoice from "../component/school/Invoice";
 import Schedule from "../component/school/Schedule";
+import AllUsers from "../component/admin/AllUsers";
+import UsersAACEB from "../component/admin/UsersAACEB";
+import UsersSubCity from "../component/admin/UsersSubCity";
+import AllOrg from "../component/admin/AllOrg";
+import OrgSubCity from "../component/admin/OrgSubCity";
+import OrgSchools from "../component/admin/OrgSchools";
+import Textbooks from "../component/admin/Textbooks";
 
 // Map to dynamically associate keys with components
 const componentsMap = {
   "super-admin": {
-    // defaultComponent: UserTable,
-    dashboard: () => <div>Dashboard Content</div>, // Placeholder for dashboard content
-    userData: UserTable,
-    schoolData: SchoolData,
-    courseData: CourseData,
-    task1: () => <div>Task 1 Content</div>, // Placeholder for task 1 content
+    dashboard: AllUsers, 
+    allUsers: AllUsers,
+    AACEB: UsersAACEB,
+    subCity: UsersSubCity,
+    allOrganizations: AllOrg,
+    subCities: OrgSubCity,
+    schools: OrgSchools,
+    textbooks: Textbooks,
   },
   admin: {
-    defaultComponent: UserTable, // You can change this to the appropriate default component for admin
-    dashboard: () => <div>{<SchoolData />}</div>,
-    staff: UserTable,
-    task1: () => <div>Task 1 Content</div>,
+    dashboard: AllUsers, // Placeholder for dashboard content
+    allUsers: AllUsers,
+    AACEB: UsersAACEB,
+    subCity: UsersSubCity,
+    allOrganizations: AllOrg,
+    subCities: OrgSubCity,
+    schools: OrgSchools,
+    textbooks: Textbooks,
   },
   school: {
     defaultComponent: Request, // You can change this to the appropriate default component for school-admin
