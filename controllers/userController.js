@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
+const sendEmail = require("../utils/email"); // Fixed the import path
 
 async function loginUser(req, res) {
   const { email, password } = req.body;
@@ -36,14 +39,10 @@ async function loginUser(req, res) {
   }
 }
 
-// Logout function
 function logoutUser(req, res) {
-  // Since JWT tokens are stateless, logging out typically involves invalidating the token on the client side
-  // You can simply send a success response back to the client indicating that the logout was successful
   res.status(200).json({ message: "Logout successful" });
 }
 
-// Get users by organization
 async function getUsersByOrganization(req, res) {
   try {
     const { organizationId } = req.params;
@@ -55,7 +54,6 @@ async function getUsersByOrganization(req, res) {
   }
 }
 
-// Get users by role
 async function getUsersByRole(req, res) {
   try {
     const { role } = req.params;
@@ -67,9 +65,54 @@ async function getUsersByRole(req, res) {
   }
 }
 
+async function resetPassword(req, res) {
+  try {
+    const { email } = req.body;
+
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Generate a unique token for password reset
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    user.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
+
+    // Save the user object with the reset token and expiration time
+    await user.save();
+
+    // Send the reset token to the user via email
+    const resetUrl = `http://${req.headers.host}/password-reset/${resetToken}`;
+    const message = `You requested a password reset. Please make a PUT request to the following URL: ${resetUrl}`;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Password Reset Token',
+        message
+      });
+
+      res.status(200).json({ message: "Password reset token sent successfully" });
+    } catch (error) {
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+      await user.save();
+
+      console.error("Error sending email:", error);
+      res.status(500).json({ message: "Error sending email" });
+    }
+  } catch (error) {
+    console.error("Error generating password reset token:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 module.exports = {
   loginUser,
   logoutUser,
   getUsersByOrganization,
   getUsersByRole,
+  resetPassword,
 };

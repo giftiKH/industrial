@@ -6,6 +6,7 @@ const jwtSecret = process.env.JWT_SECRET;
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const nodemailer=require('nodemailer');
 
 // Enable all CORS requests
 app.use(cors());
