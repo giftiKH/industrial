@@ -103,18 +103,19 @@ async function deleteUser(req, res) {
 // Get all users
 async function getAllUsers(req, res) {
   try {
-    const users = await User.find();
+    const users = await User.find().populate("organization", "name");
     res.json({ success: true, users });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
 }
 
+
 // Get user by ID
 async function getUserById(req, res) {
   try {
     const { id } = req.params;
-    const user = await User.findById(id);
+    const user = await User.findById(id).populate("organization", "name");
     if (!user) {
       return res
         .status(404)
@@ -125,6 +126,7 @@ async function getUserById(req, res) {
     res.status(400).json({ success: false, error: error.message });
   }
 }
+
 
 module.exports = {
   addUser,

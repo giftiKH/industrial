@@ -28,15 +28,6 @@ async function loginUser(req, res) {
     // Return user information and token with success message
     return res.status(200).json({
       message: "Login successful",
-      user: {
-        _id: user._id,
-        organization: user.organization,
-        full_name: user.full_name,
-        email: user.email,
-        phone: user.phone,
-        role: user.role,
-        created_by: user.created_by,
-      },
       token,
     });
   } catch (error) {

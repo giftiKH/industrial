@@ -39,6 +39,7 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
           { name: "Schools", key: "schools" },
         ],
       },
+      { name: "Profile", key:"profile"},
     ],
     admin: [
       { name: "School Request", key: "allRequest" },

@@ -9,6 +9,7 @@ import AllOrg from "../component/admin/AllOrg";
 import OrgSubCity from "../component/admin/OrgSubCity";
 import OrgSchools from "../component/admin/OrgSchools";
 import Textbooks from "../component/admin/Textbooks";
+import Profile from "../component/common/Profile";
 
 // Map to dynamically associate keys with components
 const componentsMap = {
@@ -21,6 +22,7 @@ const componentsMap = {
     subCities: OrgSubCity,
     schools: OrgSchools,
     textbooks: Textbooks,
+    profile: Profile,
   },
   admin: {
     dashboard: AllUsers, // Placeholder for dashboard content
