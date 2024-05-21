@@ -25,9 +25,7 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
         name: "Users",
         subMenus: [
           { name: "All Users", key: "allUsers" },
-          { name: "AACEB", key: "AACEB" },
-          { name: "Sub-city", key: "subCity" },
-          { name: "schools", key: "schoolUsers" },
+          { name: "Add User", key: "newUser"}
         ],
       },
       { name: "Textbooks", key: "textbooks" },
@@ -35,11 +33,11 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
         name: "Organization",
         subMenus: [
           { name: "All", key: "allOrganizations" },
-          { name: "Sub-cities", key: "subCities" },
-          { name: "Schools", key: "schools" },
+          { name: "Add organization", key: "add-org"},
         ],
       },
       { name: "Profile", key:"profile"},
+      { name: "test", key:"test"},
     ],
     admin: [
       { name: "School Request", key: "allRequest" },

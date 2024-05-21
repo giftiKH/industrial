@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -7,22 +7,37 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Checkbox,
   IconButton,
+  Snackbar,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Button,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditUserDialog from "./EditUserDialog";
+import ButtonComponent from "../ButtonComponent";
 
-const AllUsers = () => {
+const AllUsers = ({ handleButtonClick }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/users/all-users");
+        const response = await fetch(
+          "http://localhost:5000/api/users/all-users"
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch users");
         }
@@ -39,18 +54,49 @@ const AllUsers = () => {
   }, []);
 
   const handleEdit = (userId) => {
-    // Handle edit action here
-    console.log("Edit user with ID:", userId);
+    const user = users.find((user) => user._id === userId);
+    setSelectedUser(user);
+    setIsDialogOpen(true);
   };
 
-  const handleDelete = (userId) => {
-    // Handle delete action here
-    console.log("Delete user with ID:", userId);
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/users/${userIdToDelete}`,
+        {
+          method: "DELETE",
+        }
+      );
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete user");
+      }
+      setUsers(users.filter((user) => user._id !== userIdToDelete));
+      setSnackbarMessage("User deleted successfully");
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage(`Error deleting user: ${error.message}`);
+      setSnackbarOpen(true);
+    } finally {
+      setDeleteDialogOpen(false);
+      setUserIdToDelete(null);
+    }
   };
 
-  const handleAddNewUser = () => {
-    // Handle add new user action here
-    console.log("Add new user clicked");
+  const handleDeleteClick = (userId) => {
+    setUserIdToDelete(userId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+    setSelectedUser(null);
+  };
+
+  const handleSave = () => {
+    handleDialogClose();
+    setSnackbarMessage("User updated successfully");
+    setSnackbarOpen(true);
   };
 
   if (loading) {
@@ -64,9 +110,10 @@ const AllUsers = () => {
   return (
     <div>
       <h2>All Users</h2>
-      <Button variant="contained" onClick={handleAddNewUser}>
-        Add New User
-      </Button>
+      <ButtonComponent
+        name="Add New User"
+        onClick={() => handleButtonClick("newUser")}
+      />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -91,7 +138,7 @@ const AllUsers = () => {
                   <IconButton onClick={() => handleEdit(user._id)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(user._id)}>
+                  <IconButton onClick={() => handleDeleteClick(user._id)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -100,6 +147,37 @@ const AllUsers = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <EditUserDialog
+        user={selectedUser}
+        open={isDialogOpen}
+        onClose={handleDialogClose}
+        onSave={handleSave}
+      />
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

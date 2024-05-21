@@ -3,35 +3,30 @@ import Request from "../component/school/Request";
 import Invoice from "../component/school/Invoice";
 import Schedule from "../component/school/Schedule";
 import AllUsers from "../component/admin/AllUsers";
-import UsersAACEB from "../component/admin/UsersAACEB";
-import UsersSubCity from "../component/admin/UsersSubCity";
 import AllOrg from "../component/admin/AllOrg";
-import OrgSubCity from "../component/admin/OrgSubCity";
-import OrgSchools from "../component/admin/OrgSchools";
 import Textbooks from "../component/admin/Textbooks";
 import Profile from "../component/common/Profile";
+import UserForm from "../component/admin/UserForm";
+import Test from "../component/Test";
+import File from "../component/File"
+
 
 // Map to dynamically associate keys with components
 const componentsMap = {
   "super-admin": {
-    dashboard: AllUsers, 
+    dashboard: AllUsers,
     allUsers: AllUsers,
-    AACEB: UsersAACEB,
-    subCity: UsersSubCity,
     allOrganizations: AllOrg,
-    subCities: OrgSubCity,
-    schools: OrgSchools,
+    newUser: UserForm,
     textbooks: Textbooks,
     profile: Profile,
+    test: Test,
+    openFile: File,
   },
   admin: {
     dashboard: AllUsers, // Placeholder for dashboard content
     allUsers: AllUsers,
-    AACEB: UsersAACEB,
-    subCity: UsersSubCity,
     allOrganizations: AllOrg,
-    subCities: OrgSubCity,
-    schools: OrgSchools,
     textbooks: Textbooks,
   },
   school: {
@@ -52,7 +47,7 @@ const componentsMap = {
   },
 };
 
-const renderContent = (selectedKey, userRole) => {
+const renderContent = (selectedKey, userRole, handleButtonClick) => {
   const roleComponents = componentsMap[userRole];
 
   if (!roleComponents) {
@@ -62,7 +57,9 @@ const renderContent = (selectedKey, userRole) => {
   const SelectedComponent =
     roleComponents[selectedKey] || roleComponents.defaultComponent;
 
-  return <SelectedComponent />;
+  // Pass the handleButtonClick function as a prop to the selected component
+  return <SelectedComponent handleButtonClick={handleButtonClick} />;
 };
 
 export default renderContent;
+

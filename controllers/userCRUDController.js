@@ -44,22 +44,7 @@ async function addUser(req, res) {
 async function editUser(req, res) {
   try {
     const { id } = req.params;
-    const { role, password, ...userData } = req.body;
-
-    // Retrieve the current user's role from the request
-    const currentUserRole = req.user.role;
-
-    // Check if the current user's role has permission to edit the user's role
-    if (role && currentUserRole !== "super-admin") {
-      return res
-        .status(403)
-        .json({ success: false, message: "Permission denied" });
-    }
-
-    // Check if the new role is valid
-    if (role && !isValidRole(role)) {
-      return res.status(400).json({ success: false, message: "Invalid role" });
-    }
+    const { password, ...userData } = req.body;
 
     // Hash the new password if it's being updated
     if (password) {
@@ -69,7 +54,7 @@ async function editUser(req, res) {
     // Proceed with updating the user
     const user = await User.findByIdAndUpdate(
       id,
-      { ...userData, role },
+      { ...userData },
       { new: true }
     );
     if (!user) {
@@ -98,7 +83,7 @@ async function deleteUser(req, res) {
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
-}
+} 
 
 // Get all users
 async function getAllUsers(req, res) {

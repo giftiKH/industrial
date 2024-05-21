@@ -6,12 +6,14 @@ export const useUserInfo = () => {
   const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
+    console.log("useEffect in useUserInfo is running");
+
     // Retrieve token from localStorage
     const token = localStorage.getItem("token");
     console.log("Token:", token); // Log token to check if it's present
 
     // Decode the token (assuming it's a JWT token)
-    if (token) {
+    if (token && !userInfo) {
       const decodedToken = decodeToken(token);
       console.log("Decoded Token:", decodedToken); // Log decoded token
       // Extract user information from decoded token
@@ -20,10 +22,12 @@ export const useUserInfo = () => {
       // Set user information to state
       setUserInfo({ userId, role });
     }
-  }, []);
+  }, [userInfo]); // Dependency array includes userInfo
 
   return userInfo;
 };
+
+
 
 const decodeToken = (token) => {
   try {
