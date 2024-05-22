@@ -5,7 +5,7 @@ const textbookRequestSchema = new Schema({
   textbooks: [
     new Schema(
       {
-        textbookID: {
+        textbook: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Textbook",
           required: true,
@@ -30,11 +30,6 @@ const textbookRequestSchema = new Schema({
     evaluationDate: { type: Date, default: null },
   },
   requestDate: { type: Date, default: Date.now },
-  organization: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Organization",
-    required: true,
-  },
   userID: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 });
 

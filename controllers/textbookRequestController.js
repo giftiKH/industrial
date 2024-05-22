@@ -1,166 +1,143 @@
-const TextbookRequest = require('../models/TextbookRequest');
+const TextbookRequest = require("../models/TextbookRequest");
+const Textbook = require("../models/Textbook");
 
-// Get all textbook requests
-exports.getAllRequests = async (req, res) => {
+// Create a new textbook request
+exports.createTextbookRequest = async (req, res) => {
+  const { textbooks, userID } = req.body;
+
   try {
-    const requests = await TextbookRequest.find()
-      .populate({
-        path: "textbooks.textbookID",
-        select: "title grade subject language category level",
+    // Check if all textbooks exist
+    const textbooksExist = await Promise.all(
+      textbooks.map(async (item) => {
+        const textbook = await Textbook.findById(item.textbook);
+        return textbook !== null;
       })
-      .populate({
-        path: "organization",
-        select: "name type",
-      })
-      .populate({
-        path: "userID",
-        select: "full_name",
-      });
-    res.status(200).json(requests);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+    );
 
+    // If any textbook does not exist, return error
+    if (textbooksExist.some((exist) => !exist)) {
+      return res
+        .status(400)
+        .json({ message: "One or more textbooks do not exist" });
+    }
 
-
-// Create a new textbook request
-// Create a new textbook request
-exports.createRequest = async (req, res) => {
-    const { textbooks, organization, userID } = req.body;
-
-    const request = new TextbookRequest({
-        textbooks,
-        organization,
-        userID
+    const newRequest = new TextbookRequest({
+      textbooks,
+      userID,
     });
 
-    try {
-        const newRequest = await request.save();
-        res.status(201).json(newRequest);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
-};
-
-// Get a textbook request by ID
-exports.getRequestById = async (req, res) => {
-  try {
-    const request = await TextbookRequest.findById(req.params.id)
-      .populate({
-        path: "textbooks.textbookID",
-        select: "title grade subject language category level",
-      })
-      .populate({
-        path: "organization",
-        select: "name type",
-      })
-      .populate({
-        path: "userID",
-        select: "full_name",
-      });
-    if (request == null) {
-      return res.status(404).json({ message: "Cannot find request" });
-    }
-    res.status(200).json(request);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-
-// Update a textbook request
-exports.updateRequest = async (req, res) => {
-  try {
-    const request = await TextbookRequest.findById(req.params.id);
-    if (request == null) {
-      return res.status(404).json({ message: "Cannot find request" });
-    }
-
-    if (req.body.textbooks != null) {
-      request.textbooks = req.body.textbooks;
-    }
-    if (req.body.evaluation != null) {
-      request.evaluation = req.body.evaluation;
-    }
-    if (req.body.organization != null) {
-      request.organization = req.body.organization;
-    }
-    if (req.body.userID != null) {
-      request.userID = req.body.userID;
-    }
-
-    const updatedRequest = await request.save();
-    res.status(200).json(updatedRequest);
+    await newRequest.save();
+    res.status(201).json(newRequest);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
 
-
-// Delete a textbook request
-exports.deleteRequest = async (req, res) => {
+// Get all textbook requests
+exports.getAllTextbookRequests = async (req, res) => {
   try {
-    const request = await TextbookRequest.findById(req.params.id);
-    if (request == null) {
-      return res.status(404).json({ message: "Cannot find request" });
-    }
-
-    await request.deleteOne(); // Use deleteOne() instead of remove()
-    res.status(200).json({ message: "Deleted request" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-
-
-// Evaluate a textbook request
-exports.evaluateRequest = async (req, res) => {
-  try {
-    const { status, evaluatedBy, comment, evaluationDate } = req.body;
-    const requestId = req.params.id;
-
-    const request = await TextbookRequest.findById(requestId);
-    if (!request) {
-      return res.status(404).json({ message: "Request not found" });
-    }
-
-    // Update evaluation fields
-    request.evaluation.status = status;
-    request.evaluation.evaluatedBy = evaluatedBy;
-    request.evaluation.comment = comment;
-    request.evaluation.evaluationDate = evaluationDate;
-
-    // Save the updated request
-    const updatedRequest = await request.save();
-
-    res.status(200).json(updatedRequest);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-// Get all textbook requests without evaluation
-exports.getAllRequestsWithoutEvaluation = async (req, res) => {
-  try {
-    const requests = await TextbookRequest.find({}, "-evaluation");
+    const requests = await TextbookRequest.find()
+      .populate({
+        path: "textbooks.textbook",
+        select: "title grade subject language category level",
+      })
+      .populate({
+        path: "userID",
+        select: "full_name organization",
+        populate: {
+          path: "organization", // Populate the organization field
+          select: "name", // Select the name of the organization
+        },
+      });
     res.status(200).json(requests);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// Get a textbook request by ID without evaluation
-exports.getRequestByIdWithoutEvaluation = async (req, res) => {
+// Get a textbook request by ID
+exports.getTextbookRequestById = async (req, res) => {
   try {
-    const requestId = req.params.id;
-    const request = await TextbookRequest.findById(requestId, "-evaluation");
+    const request = await TextbookRequest.findById(req.params.id)
+      .populate({
+        path: "textbooks.textbook",
+        select: "title grade subject language category level",
+      })
+      .populate({
+        path: "userID",
+        select: "full_name organization",
+        populate: {
+          path: "organization", // Populate the organization field
+          select: "name", // Select the name of the organization
+        },
+      })
+      .populate({
+        path: "evaluation.evaluatedBy", // Populate evaluatedBy field
+        select: "full_name organization",
+        populate: {
+          path: "organization", // Populate the organization field
+          select: "name",
+         }, // Select full_name of the user who evaluated
+      });
     if (!request) {
-      return res.status(404).json({ message: "Request not found" });
+      return res.status(404).json({ message: "Textbook request not found" });
     }
     res.status(200).json(request);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+// Update a textbook request
+exports.updateTextbookRequest = async (req, res) => {
+  try {
+    const request = await TextbookRequest.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    if (!request) {
+      return res.status(404).json({ message: "Textbook request not found" });
+    }
+    res.status(200).json(request);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Delete a textbook request
+exports.deleteTextbookRequest = async (req, res) => {
+  try {
+    const request = await TextbookRequest.findByIdAndDelete(req.params.id);
+    if (!request) {
+      return res.status(404).json({ message: "Textbook request not found" });
+    }
+    res.status(200).json({ message: "Textbook request deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Update the evaluation of a textbook request
+exports.updateTextbookRequestEvaluation = async (req, res) => {
+  try {
+    const { status, evaluatedBy, comment, evaluationDate } = req.body;
+
+    const request = await TextbookRequest.findById(req.params.id);
+    if (!request) {
+      return res.status(404).json({ message: "Textbook request not found" });
+    }
+
+    // Update the evaluation fields
+    request.evaluation.status = status || request.evaluation.status;
+    request.evaluation.evaluatedBy = evaluatedBy || request.evaluation.evaluatedBy;
+    request.evaluation.comment = comment || request.evaluation.comment;
+    request.evaluation.evaluationDate = evaluationDate || request.evaluation.evaluationDate;
+
+    await request.save();
+
+    res.status(200).json(request);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };

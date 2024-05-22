@@ -1,92 +1,101 @@
-const Textbook = require('../models/Textbook');
-
-// Get all textbooks
-exports.getAllTextbooks = async (req, res) => {
-    try {
-        const textbooks = await Textbook.find();
-        res.status(200).json(textbooks);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-};
+const Textbook = require("../models/Textbook");
 
 // Create a new textbook
 exports.createTextbook = async (req, res) => {
-    const textbook = new Textbook({
-        grade: req.body.grade,
-        title: req.body.title,
-        subject: req.body.subject,
-        language: req.body.language,
-        category: req.body.category,
-        totalQuantity: req.body.totalQuantity
-    });
+  const { grade, title, subject, language, category } = req.body;
 
-    try {
-        const newTextbook = await textbook.save();
-        res.status(201).json(newTextbook);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
-    }
+  // Create a new textbook with default price and availableQuantity
+  const textbook = new Textbook({
+    grade,
+    title,
+    subject,
+    language: language.toLowerCase(),
+    category: category.toLowerCase(),
+    price: 0, // Default value
+    availableQuantity: 0, // Default value
+  });
+
+  try {
+    const newTextbook = await textbook.save();
+    res.status(201).json(newTextbook);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
+
+// Get all textbooks
+exports.getAllTextbooks = async (req, res) => {
+  try {
+    // Use collation for case-insensitive searches
+    const textbooks = await Textbook.find().collation({
+      locale: "en",
+      strength: 2,
+    });
+    res.json({ success: true, textbooks });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
+
 
 // Get a textbook by ID
 exports.getTextbookById = async (req, res) => {
-    try {
-        const textbook = await Textbook.findById(req.params.id);
-        if (textbook == null) {
-            return res.status(404).json({ message: 'Cannot find textbook' });
-        }
-        res.status(200).json(textbook);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+  try {
+    const textbook = await Textbook.findById(req.params.id).exec();
+    if (!textbook) {
+      return res.status(404).json({ message: "Cannot find textbook" });
     }
+    res.status(200).json(textbook);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 // Update a textbook
 exports.updateTextbook = async (req, res) => {
-    try {
-        const textbook = await Textbook.findById(req.params.id);
-        if (textbook == null) {
-            return res.status(404).json({ message: 'Cannot find textbook' });
-        }
+  try {
+    const { grade, title, subject, language, category } = req.body;
 
-        if (req.body.grade != null) {
-            textbook.grade = req.body.grade;
-        }
-        if (req.body.title != null) {
-            textbook.title = req.body.title;
-        }
-        if (req.body.subject != null) {
-            textbook.subject = req.body.subject;
-        }
-        if (req.body.language != null) {
-            textbook.language = req.body.language;
-        }
-        if (req.body.category != null) {
-            textbook.category = req.body.category;
-        }
-        if (req.body.totalQuantity != null) {
-            textbook.totalQuantity = req.body.totalQuantity;
-        }
-
-        const updatedTextbook = await textbook.save();
-        res.status(200).json(updatedTextbook);
-    } catch (err) {
-        res.status(400).json({ message: err.message });
+    const textbook = await Textbook.findById(req.params.id).exec();
+    if (!textbook) {
+      return res.status(404).json({ message: "Cannot find textbook" });
     }
+
+    if (grade != null) {
+      textbook.grade = grade;
+    }
+    if (title != null) {
+      textbook.title = title;
+    }
+    if (subject != null) {
+      textbook.subject = subject;
+    }
+    if (language != null) {
+      textbook.language = language.toLowerCase();
+    }
+    if (category != null) {
+      textbook.category = category.toLowerCase();
+    }
+
+    const updatedTextbook = await textbook.save();
+    res.status(200).json(updatedTextbook);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
+
 
 // Delete a textbook
 exports.deleteTextbook = async (req, res) => {
-    try {
-        const textbook = await Textbook.findById(req.params.id);
-        if (textbook == null) {
-            return res.status(404).json({ message: 'Cannot find textbook' });
-        }
-
-        await Textbook.deleteOne({ _id: req.params.id });
-        res.status(200).json({ message: 'Deleted textbook' });
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+  try {
+    const textbook = await Textbook.findById(req.params.id).exec();
+    if (!textbook) {
+      return res.status(404).json({ message: "Cannot find textbook" });
     }
+
+    await textbook.deleteOne(); // Use deleteOne() instead of remove()
+    res.status(200).json({ message: "Deleted textbook" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };

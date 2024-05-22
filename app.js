@@ -16,6 +16,8 @@ const userRoutes = require("./routes/userRoutes");
 const organizationRoutes = require("./routes/organizationRoutes");
 const textbookRoutes = require('./routes/textbooks');
 const textbookRequestRoutes = require('./routes/textbookRequests');
+const receivedTextbookRoutes = require('./routes/receivedTextbookRoutes')
+const distributionRatioRoutes = require("./routes/distributionRatioRoutes");
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -25,6 +27,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/org", organizationRoutes); 
 app.use('/api/textbooks', textbookRoutes);
 app.use('/api/textbookRequests', textbookRequestRoutes);
+app.use('/api/receivedTextbooks', receivedTextbookRoutes)
+app.use("/api/distributionRatios", distributionRatioRoutes);
+
 
 // Call initialization function when the server starts
 initializeServer()

@@ -1,18 +1,29 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const textbookRequestController = require('../controllers/textbookRequestController');
+const {
+  createTextbookRequest,
+  getAllTextbookRequests,
+  getTextbookRequestById,
+  updateTextbookRequest,
+  deleteTextbookRequest,
+  updateTextbookRequestEvaluation,
+} = require("../controllers/textbookRequestController");
 
-router.get('/all-request', textbookRequestController.getAllRequests);
-router.post('/add', textbookRequestController.createRequest);
-router.get('/:id', textbookRequestController.getRequestById);
-router.put('/:id', textbookRequestController.updateRequest);
-router.delete('/:id', textbookRequestController.deleteRequest);
+// Create a new textbook request
+router.post("/add", createTextbookRequest);
 
-router.put("/requests/evaluate/:id", textbookRequestController.evaluateRequest);
+// Get all textbook requests
+router.get("/all-request", getAllTextbookRequests);
 
-router.get('/requests', textbookRequestController.getAllRequestsWithoutEvaluation);
+// Get a textbook request by ID
+router.get("/:id", getTextbookRequestById);
 
-router.get('/requests/:id', textbookRequestController.getRequestByIdWithoutEvaluation);
+// Update a textbook request
+router.put("/:id", updateTextbookRequest);
 
+// Delete a textbook request
+router.delete("/:id", deleteTextbookRequest);
+
+router.put("/evaluation/:id", updateTextbookRequestEvaluation);
 
 module.exports = router;
