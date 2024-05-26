@@ -23,7 +23,7 @@ const receivedTextbookSchema = new Schema({
 
 const ReceivedTextbook = mongoose.model(
   "ReceivedTextbook",
-  receivedTextbookSchema
+  receivedTextbookSchema 
 );
 
 module.exports = ReceivedTextbook;

@@ -18,6 +18,9 @@ const textbookRoutes = require('./routes/textbooks');
 const textbookRequestRoutes = require('./routes/textbookRequests');
 const receivedTextbookRoutes = require('./routes/receivedTextbookRoutes')
 const distributionRatioRoutes = require("./routes/distributionRatioRoutes");
+const invoiceRoutes = require("./routes/invoiceRoutes");
+const distributionScheduleRoutes = require("./routes/distributionScheduleRoutes");
+const distributionReportRoutes = require("./routes/distributionReportRoutes");
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -29,6 +32,21 @@ app.use('/api/textbooks', textbookRoutes);
 app.use('/api/textbookRequests', textbookRequestRoutes);
 app.use('/api/receivedTextbooks', receivedTextbookRoutes)
 app.use("/api/distributionRatios", distributionRatioRoutes);
+app.use("/api/invoices", invoiceRoutes);
+app.use("/api/distributionSchedules", distributionScheduleRoutes);
+app.use("/api/distributionReports", distributionReportRoutes);
+
+// Middleware for logging HTTP requests
+app.use(async (req, res, next) => {
+  const logEntry = new Log({
+    level: 'info',
+    message: `${req.method} ${req.url}`,
+    user: req.user ? req.user._id : null, // Assuming user information is stored in req.user
+    ip: req.ip, // Requester's IP address
+  });
+  await logEntry.save();
+  next();
+});
 
 
 // Call initialization function when the server starts
