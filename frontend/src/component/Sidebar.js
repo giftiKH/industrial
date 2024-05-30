@@ -24,20 +24,26 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
       {
         name: "Users",
         subMenus: [
-          { name: "All Users", key: "allUsers" }, 
-          { name: "Add User", key: "newUser"}
+          { name: "All Users", key: "allUsers" },
+          { name: "Add User", key: "newUser" },
         ],
       },
-      { name: "Textbooks", key: "textbooks" },
+      {
+        name: "Textbooks",
+        subMenus: [
+          { name: "Textbook List", key: "textbooks" },
+          { name: "Add Textbook", key: "tbForm" },
+        ],
+      },
       {
         name: "Organization",
         subMenus: [
           { name: "All", key: "allOrganizations" },
-          { name: "Add organization", key: "addOrg"},
+          { name: "Add organization", key: "addOrg" },
         ],
       },
-      { name: "Profile", key:"profile"},
-      { name: "test", key:"test"},
+      { name: "Profile", key: "profile" },
+      { name: "test", key: "test" },
     ],
     admin: [
       { name: "School Request", key: "allRequest" },

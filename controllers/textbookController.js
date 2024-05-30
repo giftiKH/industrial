@@ -12,7 +12,7 @@ exports.createTextbook = async (req, res) => {
     language: language.toLowerCase(),
     category: category.toLowerCase(),
     price: 0, // Default value
-    availableQuantity: 0, // Default value
+    availableQuantity: 0, // Default value 
   });
 
   try {

@@ -4,12 +4,14 @@ import Invoice from "../component/school/Invoice";
 import Schedule from "../component/school/Schedule";
 import AllUsers from "../component/admin/AllUsers";
 import AllOrg from "../component/admin/AllOrg";
-import Textbooks from "../component/admin/Textbooks";
 import Profile from "../component/common/Profile";
 import UserForm from "../component/admin/UserForm";
 import Test from "../component/Test";
 import File from "../component/File"
 import OrgForm from "../component/admin/OrgForm"
+import AddTB from "../component/admin/AddTB";
+import TextbookList from "../component/admin/TextbookList";
+
 
 
 // Map to dynamically associate keys with components
@@ -19,17 +21,18 @@ const componentsMap = {
     allUsers: AllUsers,
     allOrganizations: AllOrg,
     newUser: UserForm,
-    textbooks: Textbooks,
+    textbooks: TextbookList,
     profile: Profile,
     test: Test,
     openFile: File,
     addOrg: OrgForm,
+    tbForm: AddTB,
   },
   admin: {
     dashboard: AllUsers, // Placeholder for dashboard content
     allUsers: AllUsers,
     allOrganizations: AllOrg,
-    textbooks: Textbooks,
+    textbooks: TextbookList,
   },
   school: {
     defaultComponent: Request, // You can change this to the appropriate default component for school-admin
