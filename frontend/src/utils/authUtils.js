@@ -17,17 +17,15 @@ export const useUserInfo = () => {
       const decodedToken = decodeToken(token);
       console.log("Decoded Token:", decodedToken); // Log decoded token
       // Extract user information from decoded token
-      const { userId, role } = decodedToken;
+      const { userId, role, organizationId } = decodedToken;
 
       // Set user information to state
-      setUserInfo({ userId, role });
+      setUserInfo({ userId, role, organizationId }); // Update to include organizationId
     }
   }, [userInfo]); // Dependency array includes userInfo
 
   return userInfo;
 };
-
-
 
 const decodeToken = (token) => {
   try {

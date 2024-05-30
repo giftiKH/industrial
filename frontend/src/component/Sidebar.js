@@ -45,6 +45,7 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
       { name: "Profile", key: "profile" },
       { name: "test", key: "test" },
     ],
+
     admin: [
       { name: "School Request", key: "allRequest" },
       {
@@ -60,14 +61,16 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
       { name: "Distribution Schedule", key: "dis-schedule" },
       { name: "Schools", key: "schools" },
     ],
-    school: [
+
+    "school-admin": [
       { name: "Request Form", key: "requestForm", default: true },
       { name: "Payment", key: "payment" },
       { name: "Schedule", key: "schedule" },
       { name: "Profile", key: "profile" },
     ],
+
     "sub-city-staff": [
-      { name: "Request Form", key: "requestForm", default: true },
+      { name: "Request Form", key: "requestList", default: true },
       { name: "subciry 1", key: "subciry1" },
       { name: "subciry 2", key: "subciry2" },
       { name: "subciry 3", key: "subciry3" },

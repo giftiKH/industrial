@@ -141,3 +141,49 @@ exports.updateTextbookRequestEvaluation = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+
+// Update a single textbook within a textbook request
+exports.updateSingleTextbook = async (req, res) => {
+  try {
+    const request = await TextbookRequest.findById(req.params.requestId);
+    if (!request) {
+      return res.status(404).json({ message: "Textbook request not found" });
+    }
+
+    const { textbookId, quantity } = req.body;
+    const textbook = request.textbooks.find((t) => t.textbook.toString() === textbookId);
+
+    if (textbook) {
+      textbook.quantity = quantity;
+    } else {
+      return res.status(404).json({ message: "Textbook not found in the request" });
+    }
+
+    await request.save();
+    res.status(200).json(request);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
+// Delete a single textbook from a textbook request
+exports.deleteSingleTextbook = async (req, res) => {
+  try {
+    const request = await TextbookRequest.findById(req.params.requestId);
+    if (!request) {
+      return res.status(404).json({ message: "Textbook request not found" });
+    }
+
+    const { textbookId } = req.body;
+    request.textbooks = request.textbooks.filter(
+      (t) => t.textbook.toString() !== textbookId
+    );
+
+    await request.save();
+    res.status(200).json(request);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+

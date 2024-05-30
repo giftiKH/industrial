@@ -18,11 +18,17 @@ async function loginUser(req, res) {
       return res.status(401).json({ message: "Invalid password" });
     }
 
-    // Generate JWT token with user ID and role
+    // Generate JWT token with user ID, role, and organization ID
+    const tokenPayload = {
+      userId: user._id,
+      role: user.role,
+      organizationId: user.organization._id, // Assuming user has a reference to organization
+    };
+
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      tokenPayload,
       process.env.JWT_SECRET || "default_jwt_secret",
-      { expiresIn: "1h" } // Token expires in 1 hour
+      { expiresIn: "5h" } // Token expires in 1 hour
     );
 
     // Return user information and token with success message

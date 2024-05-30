@@ -11,6 +11,7 @@ import File from "../component/File"
 import OrgForm from "../component/admin/OrgForm"
 import AddTB from "../component/admin/AddTB";
 import TextbookList from "../component/admin/TextbookList";
+import RequestList from "../component/subcity/RequestList";
 
 
 
@@ -34,18 +35,16 @@ const componentsMap = {
     allOrganizations: AllOrg,
     textbooks: TextbookList,
   },
-  school: {
-    defaultComponent: Request, // You can change this to the appropriate default component for school-admin
-    dashboard: () => <div>{<Request />}</div>,
+  "school-admin": {
+    dashboard: Request,
     requestForm: Request,
     payment: Invoice,
     schedule: Schedule,
     profile: () => <div>basic inforation</div>,
   },
   "sub-city-staff": {
-    defaultComponent: Request, // You can change this to the appropriate default component for school-admin
-    dashboard: () => <div>{<Request />}</div>,
-    requestForm: () => <div>basic inforation for subciry1</div>,
+    dashboard: RequestList,
+    requestList: RequestList,
     subciry1: () => <div>basic inforation for subciry1</div>,
     subciry2: () => <div>basic inforation for subciry2</div>,
     subciry3: () => <div>basic inforation for subciry3</div>,

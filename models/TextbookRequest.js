@@ -7,7 +7,7 @@ const textbookRequestSchema = new Schema({
       {
         textbook: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Textbook", 
+          ref: "Textbook",
           required: true,
         },
         quantity: { type: Number, required: true },
