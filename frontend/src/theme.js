@@ -1,4 +1,3 @@
-// theme.js
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
@@ -14,6 +13,14 @@ const theme = createTheme({
     },
     text: {
       primary: "#07375c", // Default text color
+    },
+    lightBlue: { // Add light blue color
+      main: "#ADD8E6",
+      contrastText: "#ffffff",
+    },
+    customColor: { // Add custom color #005472
+      main: "#005472",
+      contrastText: "#ffffff",
     },
   },
 });

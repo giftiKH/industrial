@@ -15,13 +15,16 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useTheme } from "@mui/material/styles";
 import EditUserDialog from "./EditUserDialog";
 import ButtonComponent from "../ButtonComponent";
 
 const AllUsers = ({ handleButtonClick }) => {
+  const theme = useTheme();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,9 +38,7 @@ const AllUsers = ({ handleButtonClick }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/users/all-users"
-        );
+        const response = await fetch("http://localhost:5000/api/users/all-users");
         if (!response.ok) {
           throw new Error("Failed to fetch users");
         }
@@ -61,12 +62,9 @@ const AllUsers = ({ handleButtonClick }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/users/${userIdToDelete}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const response = await fetch(`http://localhost:5000/api/users/${userIdToDelete}`, {
+        method: "DELETE",
+      });
       const data = await response.json();
       if (!response.ok) {
         throw new Error(data.message || "Failed to delete user");
@@ -110,10 +108,21 @@ const AllUsers = ({ handleButtonClick }) => {
   return (
     <div>
       <h2>All Users</h2>
-      <ButtonComponent
-        name="Add New User"
-        onClick={() => handleButtonClick("newUser")}
-      />
+      <Box mb={2} textAlign="right">
+        <ButtonComponent
+          name="Add New User"
+          onClick={() => handleButtonClick("newUser")}
+          style={{ 
+            color: theme.palette.primary.contrastText, 
+            backgroundColor: theme.palette.primary.main,
+            border: 'none',
+            padding: '10px 20px',
+            cursor: 'pointer',
+            borderRadius: '4px'
+          }} // Apply primary color from theme
+        />
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -135,10 +144,10 @@ const AllUsers = ({ handleButtonClick }) => {
                   {user.organization ? user.organization.name : ""}
                 </TableCell>
                 <TableCell align="right">
-                  <IconButton onClick={() => handleEdit(user._id)}>
+                  <IconButton onClick={() => handleEdit(user._id)} color="primary">
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDeleteClick(user._id)}>
+                  <IconButton onClick={() => handleDeleteClick(user._id)} color="error">
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -173,7 +182,7 @@ const AllUsers = ({ handleButtonClick }) => {
           <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="secondary">
+          <Button onClick={handleDelete} color="error">
             Delete
           </Button>
         </DialogActions>
@@ -182,4 +191,4 @@ const AllUsers = ({ handleButtonClick }) => {
   );
 };
 
-export default AllUsers; 
+export default AllUsers;

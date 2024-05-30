@@ -19,20 +19,23 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Box, // Import Box from MUI
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { fetchOrganizations } from "../../data/organizationService";
-
 import axios from "axios";
+import { useTheme } from "@mui/material/styles"; // Import useTheme from MUI
+import ButtonComponent from "../ButtonComponent"; // Import ButtonComponent
 
-
-const AllOrg = () => {
+const AllOrg = ({ handleButtonClick }) => {
   const [organizations, setOrganizations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [deleteOrgId, setDeleteOrgId] = useState(null);
   const [editOrg, setEditOrg] = useState(null);
+
+  const theme = useTheme(); // Define theme
 
   useEffect(() => {
     const loadOrganizations = async () => {
@@ -91,19 +94,26 @@ const AllOrg = () => {
 
   return (
     <div>
-      <h2>All Organizations</h2>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setEditOrg({})}
-      >
-        Add New Organization
-      </Button>
+      <h2 style={{ color: "#005472" }}>All Organizations</h2>
+      <Box mb={2} textAlign="right">
+        <ButtonComponent
+          name="Add New Org"
+        onClick={() => handleButtonClick("newOrg")}
+          style={{ 
+            color: theme.palette.primary.contrastText, 
+            backgroundColor: theme.palette.primary.main,
+            border: 'none',
+            padding: '10px 20px',
+            cursor: 'pointer',
+            borderRadius: '4px'
+          }}
+        />
+      </Box>
       
       <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
+        <Table >
+          <TableHead >
+            <TableRow> 
               <TableCell>#</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
