@@ -41,8 +41,8 @@ const LoginPage = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "calc(100vh - 64px)", // Adjusted height to accommodate the header (64px is the typical height of a Material-UI AppBar)
-          padding: "20px",
+          minHeight: "calc(100vh - 164px)", // Adjusted height to accommodate the header (64px is the typical height of a Material-UI AppBar)
+          padding: "10px",
           backgroundColor: "#e3e2e3",
         }}
       >
