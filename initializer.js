@@ -4,7 +4,9 @@ const User = require("./models/user");
 
 async function initializeAACEB() {
   try {
-    let aacebOrg = await Organization.findOne({ name: "AACEB" });
+    let aacebOrg = await Organization.findOne({ name: "AACEB" }).maxTimeMS(
+      30000
+    );
     if (!aacebOrg) {
       aacebOrg = new Organization({
         name: "AACEB",

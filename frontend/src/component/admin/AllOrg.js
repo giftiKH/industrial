@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { fetchOrganizations } from "../../data/organizationService";
 import {
   Table,
   TableBody,
@@ -9,14 +8,31 @@ import {
   TableRow,
   Paper,
   IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { fetchOrganizations } from "../../data/organizationService";
+
+import axios from "axios";
+
 
 const AllOrg = () => {
   const [organizations, setOrganizations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteOrgId, setDeleteOrgId] = useState(null);
+  const [editOrg, setEditOrg] = useState(null);
 
   useEffect(() => {
     const loadOrganizations = async () => {
@@ -33,14 +49,36 @@ const AllOrg = () => {
     loadOrganizations();
   }, []);
 
-  const handleEdit = (id) => {
-    // Handle edit action
-    console.log("Edit organization with id:", id);
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/org/${id}`);
+      setOrganizations(organizations.filter((org) => org._id !== id));
+      setDeleteOrgId(null); // Close the delete confirmation dialog
+    } catch (error) {
+      console.error("Error deleting organization:", error.message);
+    }
   };
 
-  const handleDelete = (id) => {
-    // Handle delete action
-    console.log("Delete organization with id:", id);
+  const handleEdit = (organization) => {
+    setEditOrg(organization);
+  };
+
+  const handleEditSubmit = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/org/${editOrg._id}`,
+        editOrg
+      );
+      const updatedOrganization = response.data;
+      setOrganizations(
+        organizations.map((org) =>
+          org._id === updatedOrganization._id ? updatedOrganization : org
+        )
+      );
+      setEditOrg(null); // Close the edit dialog
+    } catch (error) {
+      console.error("Error updating organization:", error.message);
+    }
   };
 
   if (loading) {
@@ -54,6 +92,14 @@ const AllOrg = () => {
   return (
     <div>
       <h2>All Organizations</h2>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setEditOrg({})}
+      >
+        Add New Organization
+      </Button>
+      
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -79,10 +125,10 @@ const AllOrg = () => {
                 <TableCell>{org.location}</TableCell>
                 <TableCell>{org.type}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleEdit(org._id)}>
+                  <IconButton onClick={() => handleEdit(org)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDelete(org._id)}>
+                  <IconButton onClick={() => setDeleteOrgId(org._id)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -91,6 +137,99 @@ const AllOrg = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Delete Confirmation Dialog */}
+      {deleteOrgId && (
+        <Dialog
+          open={Boolean(deleteOrgId)}
+          onClose={() => setDeleteOrgId(null)}
+        >
+          <DialogTitle>Delete Organization</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this organization?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setDeleteOrgId(null)}>Cancel</Button>
+            <Button onClick={() => handleDelete(deleteOrgId)} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
+      {/* Edit Organization Dialog */}
+      {editOrg && (
+        <Dialog open={Boolean(editOrg)} onClose={() => setEditOrg(null)}>
+          <DialogTitle>
+            {editOrg._id ? "Edit Organization" : "Add New Organization"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              label="Name"
+              value={editOrg.name || ""}
+              onChange={(e) => setEditOrg({ ...editOrg, name: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Email"
+              value={editOrg.email || ""}
+              onChange={(e) =>
+                setEditOrg({ ...editOrg, email: e.target.value })
+              }
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Phone"
+              value={editOrg.phone || ""}
+              onChange={(e) =>
+                setEditOrg({ ...editOrg, phone: e.target.value })
+              }
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Fax"
+              value={editOrg.fax || ""}
+              onChange={(e) => setEditOrg({ ...editOrg, fax: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Location"
+              value={editOrg.location || ""}
+              onChange={(e) =>
+                setEditOrg({ ...editOrg, location: e.target.value })
+              }
+              fullWidth
+              margin="normal"
+            />
+            <FormControl fullWidth margin="normal">
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={editOrg.type || ""}
+                onChange={(e) =>
+                  setEditOrg({ ...editOrg, type: e.target.value })
+                }
+              >
+                <MenuItem value="AACEB">AACEB</MenuItem>
+                <MenuItem value="sub-city">sub-city</MenuItem>
+                <MenuItem value="private-school">private-school</MenuItem>
+                <MenuItem value="public-school">public-school</MenuItem>
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setEditOrg(null)}>Cancel</Button>
+            <Button onClick={handleEditSubmit} color="primary">
+              {editOrg._id ? "Update" : "Add"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 };

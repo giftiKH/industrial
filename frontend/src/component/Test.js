@@ -6,7 +6,7 @@ const Test = ({ handleButtonClick }) => {
   return (
     <div>
       <h1>This is the Test Component</h1>
-      <Button name="Open File" onClick={() => handleButtonClick("profile")} />
+      <Button name="Open File" onClick={() => handleButtonClick("profile")} /> 
     </div>
   );
 };

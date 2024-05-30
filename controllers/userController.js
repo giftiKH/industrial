@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 async function loginUser(req, res) {
-  const { email, password } = req.body;
+  const { email, password } = req.body; 
 
   try {
     // Check if user exists

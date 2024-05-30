@@ -24,7 +24,7 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
       {
         name: "Users",
         subMenus: [
-          { name: "All Users", key: "allUsers" },
+          { name: "All Users", key: "allUsers" }, 
           { name: "Add User", key: "newUser"}
         ],
       },
@@ -33,7 +33,7 @@ const Sidebar = ({ userRole, onMenuItemClick }) => {
         name: "Organization",
         subMenus: [
           { name: "All", key: "allOrganizations" },
-          { name: "Add organization", key: "add-org"},
+          { name: "Add organization", key: "addOrg"},
         ],
       },
       { name: "Profile", key:"profile"},

@@ -23,4 +23,4 @@ router.get("/parent/:parentId", organizationController.getOrganizationsByParent)
 
 
 
-module.exports = router;
+module.exports = router; 

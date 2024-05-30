@@ -6,7 +6,18 @@
   "scripts": {
     "start": "nodemon app.js",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run client\" \"nodemon app.js\" "
+    "dev": "concurrently \"npm run client\" \"nodemon app.js\" ",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "@shelf/jest-mongodb",
+    "rootDir": "./",
+    "testEnvironment": "node",
+    "roots": [
+      "./tests"
+    ],
+    "globalSetup": "./setup.js",
+    "globalTeardown": "./teardown.js"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +48,10 @@
     "winston": "^3.13.0"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@shelf/jest-mongodb": "^4.3.2",
+    "concurrently": "^8.2.2",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^9.2.0",
+    "supertest": "^7.0.0"
   }
 }

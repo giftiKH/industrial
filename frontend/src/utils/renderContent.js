@@ -9,6 +9,7 @@ import Profile from "../component/common/Profile";
 import UserForm from "../component/admin/UserForm";
 import Test from "../component/Test";
 import File from "../component/File"
+import OrgForm from "../component/admin/OrgForm"
 
 
 // Map to dynamically associate keys with components
@@ -22,6 +23,7 @@ const componentsMap = {
     profile: Profile,
     test: Test,
     openFile: File,
+    addOrg: OrgForm,
   },
   admin: {
     dashboard: AllUsers, // Placeholder for dashboard content
