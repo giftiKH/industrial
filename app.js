@@ -44,6 +44,7 @@ mongoose
         app.use("/api/invoices", invoiceRoutes);
         app.use("/api/distributionSchedules", distributionScheduleRoutes);
         app.use("/api/distributionReports", distributionReportRoutes);
+      
 
         // Middleware for logging HTTP requests
         app.use(async (req, res, next) => {

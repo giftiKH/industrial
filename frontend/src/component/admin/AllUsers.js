@@ -119,7 +119,7 @@ const AllUsers = ({ handleButtonClick }) => {
             padding: '10px 20px',
             cursor: 'pointer',
             borderRadius: '4px'
-          }} // Apply primary color from theme
+          }} 
         />
       </Box>
 

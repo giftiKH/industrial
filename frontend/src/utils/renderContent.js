@@ -28,6 +28,10 @@ const componentsMap = {
     openFile: File,
     addOrg: OrgForm,
     tbForm: AddTB,
+    payment: Invoice,
+    requestForm: Request,
+    requestList: RequestList,
+    schedule: Schedule,
   },
   admin: {
     dashboard: AllUsers, // Placeholder for dashboard content

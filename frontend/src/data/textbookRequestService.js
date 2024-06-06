@@ -1,7 +1,7 @@
 // src/services/textbookRequestService.js
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/textbookRequests/all-request"; 
+const API_URL = "http://localhost:5000/api/textbookRequests/all"; 
 
 export const fetchAllTextbookRequests = async () => {
   try {

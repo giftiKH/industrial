@@ -1,20 +1,20 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const textbookSchema = new Schema(
+  {
+    textbook: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Textbook",
+      required: true,
+    },
+    quantity: { type: Number, required: true },
+  },
+  { _id: true } // Allow _id generation for each textbook
+);
+
 const textbookRequestSchema = new Schema({
-  textbooks: [
-    new Schema(
-      {
-        textbook: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Textbook",
-          required: true,
-        },
-        quantity: { type: Number, required: true },
-      },
-      { _id: false }
-    ), // Prevent _id generation for textbooks
-  ],
+  textbooks: [textbookSchema], // Use the textbook schema within the textbooks array
   evaluation: {
     status: {
       type: String,

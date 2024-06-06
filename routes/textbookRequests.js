@@ -7,21 +7,34 @@ const {
   updateTextbookRequest,
   deleteTextbookRequest,
   updateTextbookRequestEvaluation,
+  updateSingleTextbook,
+  deleteSingleTextbook,
 } = require("../controllers/textbookRequestController");
 
 // Create a new textbook request
 router.post("/add", createTextbookRequest);
 
 // Get all textbook requests
-router.get("/all-request", getAllTextbookRequests);
+router.get("/all", getAllTextbookRequests);
 
 // Get a textbook request by ID
 router.get("/:id", getTextbookRequestById);
 
-// Update a textbook request
+
 router.put("/:id", updateTextbookRequest);
 
-// Delete a textbook request
+router.put(
+  "/:requestId/textbooks/:textbookId",
+  updateSingleTextbook
+);
+
+
+router.delete(
+  "/:requestId/textbooks/:textbookId",
+  deleteSingleTextbook
+);
+
+
 router.delete("/:id", deleteTextbookRequest);
 
 router.put("/evaluation/:id", updateTextbookRequestEvaluation);

@@ -34,7 +34,6 @@ const InvoiceSchema = new Schema({
     ref: "DistributionRatio",
     required: true,
   },
-  subtotal: { type: Number, required: true },
   total: { type: Number, required: true },
   dueDate: { type: Date, required: true },
   status: {
@@ -43,6 +42,7 @@ const InvoiceSchema = new Schema({
     default: "not-required",
   },
   acceptance: AcceptanceSchema,
+  invoiceNumber: { type: String, unique: true },
 });
 
 module.exports = mongoose.model("Invoice", InvoiceSchema);

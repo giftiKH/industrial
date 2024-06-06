@@ -20,7 +20,7 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/" element={<LoginPage />} />
           <Route path="/home" element={<HomePage />} />
-        </Routes>
+         </Routes> 
       </Router>
     </ThemeProvider>
   );

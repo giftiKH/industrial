@@ -146,21 +146,22 @@ exports.updateTextbookRequestEvaluation = async (req, res) => {
 // Update a single textbook within a textbook request
 exports.updateSingleTextbook = async (req, res) => {
   try {
-    const request = await TextbookRequest.findById(req.params.requestId);
+    const { requestId, textbookId } = req.params;
+    const { quantity } = req.body;
+
+    const request = await TextbookRequest.findById(requestId);
     if (!request) {
       return res.status(404).json({ message: "Textbook request not found" });
     }
 
-    const { textbookId, quantity } = req.body;
     const textbook = request.textbooks.find((t) => t.textbook.toString() === textbookId);
-
-    if (textbook) {
-      textbook.quantity = quantity;
-    } else {
+    if (!textbook) {
       return res.status(404).json({ message: "Textbook not found in the request" });
     }
 
+    textbook.quantity = quantity;
     await request.save();
+
     res.status(200).json(request);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -170,12 +171,13 @@ exports.updateSingleTextbook = async (req, res) => {
 // Delete a single textbook from a textbook request
 exports.deleteSingleTextbook = async (req, res) => {
   try {
-    const request = await TextbookRequest.findById(req.params.requestId);
+    const { requestId, textbookId } = req.params;
+
+    const request = await TextbookRequest.findById(requestId);
     if (!request) {
       return res.status(404).json({ message: "Textbook request not found" });
     }
 
-    const { textbookId } = req.body;
     request.textbooks = request.textbooks.filter(
       (t) => t.textbook.toString() !== textbookId
     );
@@ -186,4 +188,3 @@ exports.deleteSingleTextbook = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-

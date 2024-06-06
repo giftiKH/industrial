@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useUserInfo } from "../../utils/authUtils";
-import { fetchAllTextbookRequests } from "../../data/textbookRequestService";
+import React, { useState, useEffect } from "react";
 import {
-  Box,
-  Button,
   Table,
   TableBody,
   TableCell,
@@ -11,294 +7,212 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Typography,
-  TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Button,
   IconButton,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import axios from 'axios';
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+import RequestDetails from "./RequestDetails";
+import OrganizationRequest from "./OrganizationRequest";
+import TextbookSelect from "./TextbookSelect";
+import {
+  updateTextbookRequest,
+  updateSingleTextbook,
+} from "../../data/textbookService";
+
 
 const Request = () => {
-  const userInfo = useUserInfo();
-  const [organizationRequest, setOrganizationRequest] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [textbookId, setTextbookId] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [editingTextbook, setEditingTextbook] = useState(null);
-  const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
-  const [textbookToDelete, setTextbookToDelete] = useState(null);
+  const [requestId, setRequestId] = useState(null);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [formData, setFormData] = useState({
+    textbookId: "",
+    quantity: "",
+  });
+  const [showTable, setShowTable] = useState(true); // Manage the visibility of the table
+  const [isAddingTextbook, setIsAddingTextbook] = useState(false); // State to manage the visibility of the add textbook form
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const requests = await fetchAllTextbookRequests();
-        const orgRequest = requests.find(
-          (request) =>
-            request.userID.organization._id === userInfo.organizationId
+    if (requestId) {
+      console.log("OrganizationRequest result:", requestId);
+    }
+  }, [requestId]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  
+
+  
+
+
+  const handleEditTextbook = async (textbookId, newQuantity) => {
+    try {
+      // Create the payload for updating the textbook quantity
+      const updatePayload = {
+        quantity: newQuantity,
+      };
+
+      // Update the textbook quantity on the backend
+      const response = await updateSingleTextbook(
+        requestId,
+        textbookId,
+        updatePayload
+      );
+      if (response.status === 200) {
+        console.log("Textbook quantity updated successfully:", response.data);
+        setSelectedRequest(response.data); // Update the selected request with the updated data
+      } else {
+        console.error(
+          "Failed to update textbook quantity:",
+          response.data.message
         );
-        setOrganizationRequest(orgRequest);
-      } catch (error) {
-        console.error("Error fetching textbook requests:", error);
       }
-    };
-
-    if (userInfo) {
-      fetchData();
-    }
-  }, [userInfo]);
-
-  const handleAddTextbook = () => {
-    setEditingTextbook(null);
-    setTextbookId("");
-    setQuantity("");
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setTextbookId("");
-    setQuantity("");
-  };
-
-  const handleSave = async () => {
-    if (!textbookId || !quantity) {
-      alert("Please enter a textbook ID and quantity");
-      return;
-    }
-
-    let updatedTextbooks;
-    if (editingTextbook) {
-      updatedTextbooks = organizationRequest.textbooks.map((item) =>
-        item.textbook._id === editingTextbook.textbook._id
-          ? { ...item, quantity: parseInt(quantity) }
-          : item
-      );
-    } else {
-      updatedTextbooks = [
-        ...organizationRequest.textbooks,
-        { textbook: textbookId, quantity: parseInt(quantity) },
-      ];
-    }
-
-    try {
-      const response = await axios.put(
-        `http://localhost:5000/api/textbookRequests/${organizationRequest._id}`,
-        { textbooks: updatedTextbooks }
-      );
-
-      setOrganizationRequest(response.data);
-      handleClose();
     } catch (error) {
-      console.error("Error updating textbook request:", error);
+      console.error("Error updating textbook quantity:", error);
     }
   };
 
-  const handleEditTextbook = (textbook) => {
-    setEditingTextbook(textbook);
-    setTextbookId(textbook.textbook._id);
-    setQuantity(textbook.quantity);
-    setOpen(true);
-  };
-
-  const handleOpenDeleteConfirmation = (textbook) => {
-    setTextbookToDelete(textbook);
-    setOpenDeleteConfirmation(true);
-  };
-
-  const handleCloseDeleteConfirmation = () => {
-    setOpenDeleteConfirmation(false);
-    setTextbookToDelete(null);
-  };
-
-  const handleDeleteTextbook = async () => {
-    if (!textbookToDelete) return;
-
+  const handleDeleteTextbook = async (textbookId) => {
     try {
-      const updatedTextbooks = organizationRequest.textbooks.filter(
-        (item) => item.textbook._id !== textbookToDelete.textbook._id
+      // Filter out the textbook to be deleted
+      const updatedTextbooks = selectedRequest.textbooks.filter(
+        (textbook) => textbook.textbook._id !== textbookId
       );
 
-      const response = await axios.put(
-        `http://localhost:5000/api/textbookRequests/${organizationRequest._id}`,
-        { textbooks: updatedTextbooks }
-      );
+      // Update the request with the filtered textbooks
+      const updatedRequest = {
+        ...selectedRequest,
+        textbooks: updatedTextbooks,
+      };
 
-      setOrganizationRequest(response.data);
-      handleCloseDeleteConfirmation();
+      // Update the request on the backend
+      const response = await updateTextbookRequest(requestId, updatedRequest);
+      if (response.status === 200) {
+        console.log("Textbook deleted successfully:", response.data);
+        setSelectedRequest(response.data); // Update the selected request with the updated data
+      } else {
+        console.error("Failed to delete textbook:", response.data.message);
+      }
     } catch (error) {
-      console.error("Error deleting textbook from request:", error);
+      console.error("Error deleting textbook:", error);
     }
-  };
-
-  const handleSubmitRequest = () => {
-    console.log("Submit request");
-  };
-
-  const handleDeleteRequest = async () => {
-    try {
-      // Make an API call to delete the request
-      await axios.delete(
-        `http://localhost:5000/api/textbookRequests/${organizationRequest._id}`
-      );
-
-      // If successful, set organizationRequest to null
-      setOrganizationRequest(null);
-      console.log("Request deleted successfully");
-    } catch (error) {
-      console.error("Error deleting request:", error);
-    }
-  };
-
-  const handleStartNewRequest = () => {
-    console.log("Starting a new request");
   };
 
   return (
-    <Box p={3}>
-      <Typography variant="h4" gutterBottom>
-        Textbook Request
-      </Typography>
-      {organizationRequest ? (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            Your Organization's Request
-          </Typography>
-          <Typography gutterBottom>
-            Request Date:{" "}
-            {new Date(organizationRequest.requestDate).toLocaleDateString()}
-          </Typography>
-          <Box mb={2}>
-            <Button variant="contained" onClick={handleAddTextbook}>
-              Add Textbook
-            </Button>
-          </Box>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>#</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Grade</TableCell>
-                  <TableCell>Subject</TableCell>
-                  <TableCell>Language</TableCell>
-                  <TableCell>Category</TableCell>
-                  <TableCell>Quantity</TableCell>
-                  <TableCell>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {organizationRequest.textbooks.map((item, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>{item.textbook.title}</TableCell>
-                    <TableCell>{item.textbook.grade}</TableCell>
-                    <TableCell>{item.textbook.subject}</TableCell>
-                    <TableCell>{item.textbook.language}</TableCell>
-                    <TableCell>{item.textbook.category}</TableCell>
-                    <TableCell>{item.quantity}</TableCell>
-                    <TableCell>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEditTextbook(item)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        color="secondary"
-                        onClick={() => handleOpenDeleteConfirmation(item)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <Box mt={2}>
-            <Button variant="contained" onClick={handleSubmitRequest}>
-              Submit Request
-            </Button>
+    <div>
+      <OrganizationRequest setRequestId={setRequestId} />
+      {!showTable && isAddingTextbook && (
+        <form >
+          <div>
+            <TextbookSelect
+              for="addTextbook"
+              requestId={requestId}
+              selectedRequest={selectedRequest}
+              setSelectedRequest={setSelectedRequest}
+              setShowTable={setShowTable}
+              formData={formData}
+              setFormData={setFormData}
+              
+            />
+          </div>
+        </form>
+      )}
+      {showTable &&
+        requestId &&
+        requestId !== "no request" &&
+        requestId !== "error" && (
+          <>
+            <RequestDetails
+              requestId={requestId}
+              setRequest={setSelectedRequest}
+            />
             <Button
               variant="contained"
-              onClick={handleDeleteRequest}
-              sx={{ ml: 1 }}
+              color="primary"
+              onClick={() => {
+                setShowTable(false);
+                setIsAddingTextbook(true);
+              }} // Show the add textbook form when clicking the button
             >
-              Delete Request
+              Add Textbook
             </Button>
-          </Box>
-          <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>
-              {editingTextbook ? "Edit Textbook" : "Add Textbook"}
-            </DialogTitle>
-            <DialogContent>
-              <TextField
-                margin="normal"
-                label="Textbook ID"
-                fullWidth
-                value={textbookId}
-                onChange={(e) => setTextbookId(e.target.value)}
-                disabled={!!editingTextbook}
-              />
-              <TextField
-                margin="normal"
-                label="Quantity"
-                fullWidth
-                type="number"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleSave} color="primary" variant="contained">
-                Save
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog
-            open={openDeleteConfirmation}
-            onClose={handleCloseDeleteConfirmation}
-          >
-            <DialogTitle>Confirm Delete</DialogTitle>
-            <DialogContent>
-              <Typography>
-                Are you sure you want to delete this textbook?
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseDeleteConfirmation} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleDeleteTextbook} color="secondary">
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
-      ) : (
-        <Box>
-          <Typography variant="h6" gutterBottom>
-            No Request Found for Your Organization
-          </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleStartNewRequest}
-          >
-            Start New Request
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>#</TableCell>
+                    <TableCell>Title</TableCell>
+                    <TableCell>Language</TableCell>
+                    <TableCell>Grade</TableCell>
+                    <TableCell>Subject</TableCell>
+                    <TableCell>Category</TableCell>
+                    <TableCell>Quantity</TableCell>
+                    <TableCell>Action</TableCell> {/* Add Action column */}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {selectedRequest &&
+                    selectedRequest.textbooks.map((textbook, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{textbook.textbook.title}</TableCell>
+                        <TableCell>{textbook.textbook.language}</TableCell>
+                        <TableCell>{textbook.textbook.grade}</TableCell>
+                        <TableCell>{textbook.textbook.subject}</TableCell>
+                        <TableCell>{textbook.textbook.category}</TableCell>
+                        <TableCell>{textbook.quantity}</TableCell>
+                        <TableCell>
+                          <IconButton
+                            onClick={() =>
+                              handleEditTextbook(
+                                textbook.textbook._id,
+                                textbook.quantity
+                              )
+                            }
+                          >
+                            <EditIcon />
+                          </IconButton>
+                          <IconButton
+                            onClick={() =>
+                              handleDeleteTextbook(textbook.textbook._id)
+                            }
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
+        )}
+      {requestId === "no request" && (
+        <form >
+          <div>
+            <TextbookSelect formData={formData} handleChange={handleChange} />
+          </div>
+
+          <Button type="submit" variant="contained" color="primary">
+            Create Request
           </Button>
-        </Box>
+        </form>
       )}
-    </Box>
+      {requestId === "error" && <div>Error fetching request data.</div>}
+    </div>
   );
 };
 
 export default Request;
+
+
+
+
+

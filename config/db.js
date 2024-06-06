@@ -4,7 +4,8 @@ const connect = async () => {
   try {
     const mongoURI =
       "mongodb+srv://giftikebede21:giftikebede21@cluster0.pp7fi4a.mongodb.net/new?retryWrites=true&w=majority&appName=Cluster0";
-        await mongoose.connect(mongoURI, {
+       
+      await mongoose.connect(mongoURI, {
      // useNewUrlParser: true,
      // useUnifiedTopology: true,
     });
