@@ -32,7 +32,9 @@ const userSchema = new mongoose.Schema({
       "AACEB-staff",
       "admin",
       "sub-city-staff",
-      "school-admin",
+      "private-school-admin",
+      "public-school-admin",
+
     ],
     required: true,
   },

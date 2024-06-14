@@ -1,13 +1,49 @@
-body {
+/* Header specific styles */
+body, html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.header-logo {
+  height: 60px; /* Adjusted size to match the inline style */
+  margin-bottom: 8px;
 }
+
+.centered-menu {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.dashboard-menu {
+  display: flex;
+  margin-left: auto;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+
+.content {
+  flex-grow: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #f4f4f4; /* Adjust as needed */
+  overflow-y: auto; /* Enable scrolling within the sidebar */
+}
+
+

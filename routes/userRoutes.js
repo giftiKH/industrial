@@ -8,7 +8,12 @@ const {
   getUserById,
 } = require("../controllers/userCRUDController");
 
-const { loginUser, logoutUser } = require("../controllers/userController");
+const {
+  loginUser,
+  logoutUser,
+  getUsersByOrganization,
+  getUsersByRole,
+} = require("../controllers/userController");
 
 // Login and logout routes (public routes)
 router.post("/login", loginUser);
@@ -20,5 +25,7 @@ router.put("/:id", editUser);
 router.delete("/:id", deleteUser);
 router.get("/all-users", getAllUsers);
 router.get("/:id", getUserById);
+router.get("/:org", getUsersByOrganization);
+router.get("/:role", getUsersByRole);
 
 module.exports = router;
