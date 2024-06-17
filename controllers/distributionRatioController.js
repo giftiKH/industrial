@@ -12,6 +12,7 @@ exports.createDistributionRatio = async (req, res) => {
     const newDistributionRatio = new DistributionRatio({
       preparedBy,
       title,
+      date: new Date().getFullYear(), // Set the date to the current year
       ratio,
     });
 
@@ -73,41 +74,17 @@ exports.createDistributionRatio = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-
-exports.getAllDistributionRatios = async (req, res) => {
-  try {
-    const distributionRatios = await DistributionRatio.find()
-      .populate("preparedBy", "name")
-      .populate("ratio.organization", "name")
-      .populate("ratio.textbook.id", "title grade subject");
-    res.status(200).json(distributionRatios);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-exports.getDistributionRatioById = async (req, res) => {
-  try {
-    const distributionRatio = await DistributionRatio.findById(req.params.id)
-      .populate("preparedBy", "name")
-      .populate("ratio.organization", "name")
-      .populate("ratio.textbook.id", "title grade subject");
-    if (!distributionRatio) {
-      return res.status(404).json({ message: "Distribution ratio not found" });
-    }
-    res.status(200).json(distributionRatio);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
 exports.updateDistributionRatio = async (req, res) => {
-  const { ratio } = req.body;
+  const { ratio, ...otherFields } = req.body;
 
   try {
     const distributionRatio = await DistributionRatio.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      {
+        ...otherFields,
+        date: new Date().getFullYear(), // Update the date to the current year
+        ratio
+      },
       { new: true }
     );
     if (!distributionRatio) {
@@ -191,7 +168,6 @@ exports.updateDistributionRatio = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
-
 exports.deleteDistributionRatio = async (req, res) => {
   try {
     const distributionRatio = await DistributionRatio.findByIdAndDelete(

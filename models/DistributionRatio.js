@@ -7,7 +7,7 @@ const TextbookSchema = new Schema({
   forPrivate: { type: Number },
   forPublic: { type: Number },
   total: { type: Number, required: true },
-});
+}, { timestamps: true }); // Add timestamps here
 
 const RatioSchema = new Schema({
   organization: {
@@ -21,13 +21,16 @@ const RatioSchema = new Schema({
     enum: ["not-required", "paid", "not-paid"],
     default: "not-required",
   },
-});
+}, { timestamps: true }); // Add timestamps here
 
 const DistributionRatioSchema = new Schema({
   preparedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   title: { type: String, required: true },
-  date: { type: Date, default: Date.now },
+  date: { 
+    type: Number, 
+    default: () => new Date().getFullYear() // Store only the year
+  },
   ratio: [RatioSchema],
-});
+}, { timestamps: true }); // Add timestamps here
 
 module.exports = mongoose.model("DistributionRatio", DistributionRatioSchema);
