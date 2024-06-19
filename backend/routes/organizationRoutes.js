@@ -16,7 +16,7 @@ router.delete("/:id", organizationController.deleteOrganization);
 router.get("/organizations", organizationController.getAllOrganizations);
 
 // Get organizations by type
-router.get('/:type', organizationController.getOrganizationsByType);
+router.get('/:type', organizationController.getOrganizationsByType); 
 
 // Get organizations by parent
 router.get("/parent/:parentId", organizationController.getOrganizationsByParent);

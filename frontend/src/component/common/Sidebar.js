@@ -27,6 +27,16 @@ const Sidebar = ({ currentPage }) => {
   const [openCategory, setOpenCategory] = useState(null);
   const [userRole, setUserRole] = useState("");
 
+  /*
+  "super-admin",
+      "AACEB-staff", 
+      "admin",
+      "sub-city-staff",
+      "private-school-admin",
+      "public-school-admin",
+      
+  */
+
   useEffect(() => {
     // Decode the token and extract the user's role
     const decodedToken = tokenDecoder();
@@ -89,19 +99,19 @@ const Sidebar = ({ currentPage }) => {
       text: "Textbooks",
       category: "textbooks",
       route: "#",
-      roles: ["super-admin"],
+      roles: ["AACEB-staff", "super-admin"],
       children: [
         {
           icon: <CollectionsBookmarkIcon />,
           text: "Textbooks",
           route: "/textbooks",
-          roles: ["super-admin"],
+          roles: ["AACEB-staff", "super-admin"],
         },
         {
           icon: <AddCircleIcon />,
           text: "Add Textbook",
           route: "/add-textbook",
-          roles: ["super-admin"],
+          roles: ["AACEB-staff", "super-admin"],
         },
       ],
     },
@@ -109,22 +119,27 @@ const Sidebar = ({ currentPage }) => {
       icon: <AttachMoneyIcon />,
       text: "Payments",
       route: "/payment",
-      roles: ["super-admin"],
+      roles: ["private-school-admin", "super-admin"],
     },
     {
       text: "Request Form",
       route: "/request-submission",
-      roles: ["super-admin"],
+      roles: ["private-school-admin", "public-school-admin", "super-admin"],
     },
     {
       text: "Request List",
       route: "/request-list",
-      roles: ["super-admin"],
+      roles: ["sub-city-staff", "super-admin"],
     },
     {
       icon: <CollectionsBookmarkIcon />,
       text: "Available Textbook",
       route: "/available-Textbooks",
+      roles: ["AACEB-staff", "super-admin"],
+    },
+    {
+      text: "test list",
+      route: "/test",
       roles: ["super-admin"],
     },
   ];

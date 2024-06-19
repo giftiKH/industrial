@@ -7,8 +7,10 @@ import {
   Button,
   Box,
   Typography,
-  InputLabel,
   Snackbar,
+  FormControl,
+  InputLabel,
+  Grid,
 } from "@mui/material";
 
 const AddTB = () => {
@@ -72,67 +74,103 @@ const AddTB = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
-      <Typography variant="h6" gutterBottom>
+    <Box
+      sx={{
+        maxWidth: 600,
+        margin: "auto",
+        textAlign: "center",
+        bgcolor: "#f0f0f0",
+        boxShadow: 1,
+        p: 3,
+      }}
+    >
+      <Typography variant="h6" gutterBottom sx={{ mb: 3 }}>
         Add New Textbook
       </Typography>
       <form onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          required
-          name="grade"
-          label="Grade"
-          value={grade}
-          onChange={handleChange}
-          type="number"
-          inputProps={{ min: 1, max: 12 }}
-        />
-        <TextField
-          fullWidth
-          required
-          name="title"
-          label="Title"
-          value={title}
-          onChange={handleChange}
-        />
-        <TextField
-          fullWidth
-          required
-          name="subject"
-          label="Subject"
-          value={subject}
-          onChange={handleChange}
-        />
-        <InputLabel htmlFor="language">Language</InputLabel>
-        <Select
-          fullWidth
-          required
-          name="language"
-          value={language}
-          onChange={handleChange}
-          inputProps={{ id: "language" }}
-        >
-          <MenuItem value="amharic">Amharic</MenuItem>
-          <MenuItem value="english">English</MenuItem>
-          <MenuItem value="afaan oromo">Afaan Oromo</MenuItem>
-        </Select>
-        <InputLabel htmlFor="category">Category</InputLabel>
-        <Select
-          fullWidth
-          required
-          name="category"
-          value={category}
-          onChange={handleChange}
-          inputProps={{ id: "category" }}
-        >
-          <MenuItem value="teacher guide">Teacher Guide</MenuItem>
-          <MenuItem value="student textbook">Student Textbook</MenuItem>
-        </Select>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <TextField
+                required
+                name="grade"
+                label="Grade"
+                value={grade}
+                onChange={handleChange}
+                type="number"
+                inputProps={{ min: 1, max: 12 }}
+                sx={{ height: 55 }} // Decrease height of TextField
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <TextField
+                required
+                name="title"
+                label="Title"
+                value={title}
+                onChange={handleChange}
+                sx={{ height: 55 }} // Decrease height of TextField
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <TextField
+                required
+                name="subject"
+                label="Subject"
+                value={subject}
+                onChange={handleChange}
+                sx={{ height: 55 }} // Decrease height of TextField
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel htmlFor="language">Language</InputLabel>
+              <Select
+                required
+                name="language"
+                value={language}
+                onChange={handleChange}
+                inputProps={{ id: "language" }}
+                sx={{ height: 55 }} // Decrease height of Select
+              >
+                <MenuItem value="amharic">Amharic</MenuItem>
+                <MenuItem value="english">English</MenuItem>
+                <MenuItem value="afaan oromo">Afaan Oromo</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel htmlFor="category">Category</InputLabel>
+              <Select
+                required
+                name="category"
+                value={category}
+                onChange={handleChange}
+                inputProps={{ id: "category" }}
+                sx={{ height: 55 }} // Decrease height of Select
+              >
+                <MenuItem value="teacher guide">Teacher Guide</MenuItem>
+                <MenuItem value="student textbook">Student Textbook</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
         <Button
           type="submit"
           variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
+          sx={{
+            mt: 3,
+            width: "50%",
+            bgcolor: "#07375c",
+            color: "#ffffff",
+            mx: "auto",
+          }}
         >
           Add Textbook
         </Button>

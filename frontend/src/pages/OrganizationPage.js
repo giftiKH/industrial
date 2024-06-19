@@ -12,7 +12,7 @@ function OrganizationPage() {
       <div className="main-content">
         <Sidebar role="admin" currentPage="/organizations" />
         <div className="content">
-          <h1>all organization</h1>
+          <h1>All organization</h1>
           <OrganizationProvider>
             <OrganizationList />
           </OrganizationProvider>

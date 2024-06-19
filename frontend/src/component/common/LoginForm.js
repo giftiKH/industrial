@@ -16,7 +16,7 @@ const LoginForm = () => {
 
     try {
       await login(email, password);
-      navigate("/users");
+      navigate("/basic-info");
     } catch (error) {
       setError(error.message); // Set error state to display error message
     }

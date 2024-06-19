@@ -3,6 +3,7 @@ import Header from "../component/common/Header";
 import Sidebar from "../component/common/Sidebar";
 import "../index.css";
 import RequestList from "../component/subcityComponent/RequestList";
+import { TextbookRequestProvider } from "../context/TextbookRequestContext";
 
 
 function AllRequestPage() {
@@ -12,7 +13,9 @@ function AllRequestPage() {
       <div className="main-content">
         <Sidebar role="admin" currentPage="/request-list" />
         <div className="content">
-          <RequestList />
+          <TextbookRequestProvider>
+            <RequestList />
+          </TextbookRequestProvider>
         </div>
       </div>
     </div>

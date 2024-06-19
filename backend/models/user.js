@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: [
       "super-admin",
-      "AACEB-staff",
+      "AACEB-staff", 
       "admin",
       "sub-city-staff",
       "private-school-admin",

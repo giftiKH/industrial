@@ -62,7 +62,7 @@ const TextbookList = () => {
   const handleSaveEdit = async () => {
     try {
       const updatedTextbook = {
-        ...editTextbook, 
+        ...editTextbook,
         grade: editGrade,
         title: editTitle,
         subject: editSubject,
@@ -138,14 +138,16 @@ const TextbookList = () => {
                   <TableCell>{textbook.level}</TableCell>
                   <TableCell>
                     <IconButton
-                      color="primary"
+                      aria-label="edit"
                       onClick={() => handleEdit(textbook)}
+                      style={{ color: "#07375c" }} // Edit button color
                     >
                       <EditIcon />
                     </IconButton>
                     <IconButton
-                      color="secondary"
+                      aria-label="delete"
                       onClick={() => handleOpenDeleteDialog(textbook._id)}
+                      style={{ color: "red" }} // Delete button color
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -207,7 +209,7 @@ const TextbookList = () => {
           <Button onClick={handleCancelEdit} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSaveEdit} color="secondary">
+          <Button onClick={handleSaveEdit} variant="contained" color="primary">
             <SaveIcon /> Save
           </Button>
         </DialogActions>
@@ -223,7 +225,11 @@ const TextbookList = () => {
           <Button onClick={handleCloseDeleteDialog} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDelete} color="secondary">
+          <Button
+            onClick={handleDelete}
+            variant="contained"
+            style={{ backgroundColor: "red", color: "white" }}
+          >
             <DeleteIcon /> Delete
           </Button>
         </DialogActions>

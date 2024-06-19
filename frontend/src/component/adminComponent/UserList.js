@@ -24,11 +24,10 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useOrganizationRoleSelection from "../../hooks/useOrganizationRoleSelection";
+import NavigationButton from "../common/NavigationButton";
 
 function UserList() {
-  const { state, getAllUsers, deleteUser, editUser } = useUserContext();
-  const { loading, error, users } = state;
-
+  const { users, error, editUser, deleteUser } = useUserContext();
   const [editUserData, setEditUserData] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [confirmDeleteDialogOpen, setConfirmDeleteDialogOpen] = useState(false);
@@ -44,24 +43,10 @@ function UserList() {
     handleRoleChange,
   } = useOrganizationRoleSelection();
 
+  // Log users array whenever it updates
   useEffect(() => {
-    getAllUsers(); // Fetch users on component mount
-  }, []);
-
-  useEffect(() => {
-    console.log("Current users:", users); // Log users to check if they are correctly fetched
-  }, [users]); // Log users whenever they are updated
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {String(error)}</div>; // Ensure error is a string
-  }
-
-  // Ensure users is correctly defined and an array
-  const userArray = users && users.success ? users.users : [];
+    console.log(" users:", users);
+  }, [users]);
 
   const handleEdit = (user) => {
     // When editing, set selectedOrganizationId to the user's organization ID
@@ -93,8 +78,6 @@ function UserList() {
       await editUser(updatedUser._id, updatedUser); // Assuming editUser handles the update
       setOpenEditDialog(false);
       setEditUserData(null);
-      // Optionally, fetch updated users after edit
-      getAllUsers();
     } catch (error) {
       console.error("Failed to edit user:", error);
       // Handle error state if necessary
@@ -111,8 +94,6 @@ function UserList() {
       await deleteUser(deleteUserId);
       setConfirmDeleteDialogOpen(false);
       setDeleteUserId(null);
-      // Optionally, fetch updated users after delete
-      getAllUsers();
     } catch (error) {
       console.error("Failed to delete user:", error);
       // Handle error state if necessary
@@ -126,6 +107,7 @@ function UserList() {
 
   return (
     <TableContainer component={Paper}>
+      <NavigationButton buttonText="Add New User" route="/add-user" />
       <Table>
         <TableHead>
           <TableRow>
@@ -138,30 +120,44 @@ function UserList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {userArray.length > 0 ? (
-            userArray.map((user) => (
-              <TableRow key={user._id}>
-                <TableCell>{user.full_name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  {user.organization ? user.organization.name : "N/A"}
-                </TableCell>
-                <TableCell>{user.phone || "N/A"}</TableCell>
-                <TableCell>{user.role || "N/A"}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleEdit(user)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(user._id)}>
-                    <DeleteIcon />
-                  </IconButton>
+          {users ? (
+            users.length > 0 ? (
+              users.map((user) => (
+                <TableRow key={user._id}>
+                  <TableCell>{user.full_name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    {user.organization ? user.organization.name : "N/A"}
+                  </TableCell>
+                  <TableCell>{user.phone || "N/A"}</TableCell>
+                  <TableCell>{user.role || "N/A"}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleEdit(user)}
+                      style={{ color: "#07375c" }} // Edit button color
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => handleDelete(user._id)}
+                      style={{ color: "red" }} // Delete button color
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No users found.
                 </TableCell>
               </TableRow>
-            ))
+            )
           ) : (
             <TableRow>
               <TableCell colSpan={6} align="center">
-                No users found.
+                Loading...
               </TableCell>
             </TableRow>
           )}
@@ -239,7 +235,6 @@ function UserList() {
           </Button>
         </DialogActions>
       </Dialog>
-
       {/* Confirm Delete Dialog */}
       <Dialog open={confirmDeleteDialogOpen} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Delete</DialogTitle>
@@ -247,7 +242,6 @@ function UserList() {
           <DialogContentText>
             Are you sure you want to delete this user?
           </DialogContentText>
-         
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete}>Cancel</Button>

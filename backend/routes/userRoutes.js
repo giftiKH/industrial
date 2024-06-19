@@ -27,5 +27,7 @@ router.get("/all-users", getAllUsers);
 router.get("/:id", getUserById);
 router.get("/:org", getUsersByOrganization);
 router.get("/:role", getUsersByRole);
+ 
+
 
 module.exports = router;

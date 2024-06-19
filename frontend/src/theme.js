@@ -15,7 +15,7 @@ const theme = createTheme({
       primary: "#07375c", // Default text color
     },
     lightBlue: { // Add light blue color
-      main: "#ADD8E6",
+      main: "#07375c",
       contrastText: "#ffffff",
     },
     customColor: { // Add custom color #005472

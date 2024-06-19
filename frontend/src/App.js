@@ -14,6 +14,11 @@ import RequestDetailPage from "./pages/RequestDetailPage";
 import UserPage from "./pages/UserPage.js";
 import AllRequestPage from "./pages/AllRequestPage.js";
 import AvailableTextbooksPage from "./pages/AvailableTextbooksPage.js";
+import EmailTestPage from "./pages/EmailTestPage.js";
+import BasicInfo from "./component/common/BasicInfo.js";
+import HomePage from "./pages/HomePage.js";
+import TestPage from "./pages/TestPage.js";
+
 
 
 
@@ -31,13 +36,17 @@ function App() {
         <Route path="/textbooks" element={<TextbookPage />} />
         <Route path="/add-textbook" element={<AddTextbookPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+
         <Route path="/request-submission" element={<RequestSubmissionPage />} />
-        <Route path="/request-detail" element={<RequestDetailPage />} />
+        <Route path="/requests/:id" element={<RequestDetailPage />} />
         <Route path="/request-list" element={<AllRequestPage />} />
         <Route
           path="/available-Textbooks"
           element={<AvailableTextbooksPage />}
         />
+        <Route path="/send-mail" element={<EmailTestPage />} />
+        <Route path="/basic-info" element={<HomePage />} />
+        <Route path="/test" element={<TestPage />} />
       </Routes>
     </Router>
   );

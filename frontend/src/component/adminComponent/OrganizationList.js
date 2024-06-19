@@ -18,11 +18,13 @@ import {
   TextField,
   Select,
   MenuItem,
+  Box,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import roleTypeOptions from "../../utils/typeOptionsConfig";
-
+import AddIcon from "@mui/icons-material/Add"; // Import AddIcon from MUI
+import NavigationButton from "../common/NavigationButton";
 
 const OrganizationList = () => {
   const { organizations, updateOrganization, removeOrganization } =
@@ -30,7 +32,7 @@ const OrganizationList = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [editOpen, setEditOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false); // State for delete confirmation dialog
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedOrganizationId, setSelectedOrganizationId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editEmail, setEditEmail] = useState("");
@@ -40,7 +42,7 @@ const OrganizationList = () => {
   const [editType, setEditType] = useState("");
 
   useEffect(() => {
-    console.log("Organizations data:", organizations); // Ensure organizations are logged correctly
+    console.log("Organizations data:", organizations);
   }, [organizations]);
 
   const handleChangePage = (event, newPage) => {
@@ -62,8 +64,8 @@ const OrganizationList = () => {
       setEditEmail(organization.email);
       setEditPhone(organization.phone);
       setEditFax(organization.fax);
-      setEditLocation(organization.location); // Populate location field
-      setEditType(organization.type); // Populate type field
+      setEditLocation(organization.location);
+      setEditType(organization.type);
       setEditOpen(true);
     }
   };
@@ -86,8 +88,8 @@ const OrganizationList = () => {
         email: editEmail,
         phone: editPhone,
         fax: editFax,
-        location: editLocation, // Include location in updated data
-        type: editType, // Include type in updated data
+        location: editLocation,
+        type: editType,
       };
 
       await updateOrganization(selectedOrganizationId, updatedOrganization);
@@ -97,7 +99,6 @@ const OrganizationList = () => {
       handleCloseEdit();
     } catch (error) {
       console.error("Error updating organization:", error);
-      // Handle error state or display error message
     }
   };
 
@@ -115,7 +116,6 @@ const OrganizationList = () => {
       setDeleteOpen(false);
     } catch (error) {
       console.error("Error deleting organization:", error);
-      // Handle error state or display error message
     }
   };
 
@@ -124,8 +124,19 @@ const OrganizationList = () => {
     setDeleteOpen(false);
   };
 
+  const handleAddNewOrg = () => {
+    // Logic to handle adding a new organization (if needed)
+    console.log("Add New Organization clicked");
+  };
+
   return (
     <Paper>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", padding: 2 }}>
+        <NavigationButton
+          buttonText="Add New organization"
+          route="/add-organization"
+        />
+      </Box>
       <TableContainer>
         <Table>
           <TableHead>
@@ -138,7 +149,6 @@ const OrganizationList = () => {
               <TableCell>Location</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Actions</TableCell>
-              {/* Add other headers as needed */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -158,22 +168,23 @@ const OrganizationList = () => {
                       <IconButton
                         aria-label="edit"
                         onClick={() => handleEdit(organization._id)}
+                        style={{ color: "#07375c" }} // Edit button color
                       >
                         <EditIcon />
                       </IconButton>
                       <IconButton
                         aria-label="delete"
                         onClick={() => handleDelete(organization._id)}
+                        style={{ color: "red" }} // Delete button color
                       >
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
-                    {/* Render other fields as needed */}
                   </TableRow>
                 ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7}>No organizations found</TableCell>
+                <TableCell colSpan={8}>No organizations found</TableCell>
               </TableRow>
             )}
           </TableBody>
@@ -223,7 +234,6 @@ const OrganizationList = () => {
             value={editLocation}
             onChange={(e) => setEditLocation(e.target.value)}
           />
-          
           <Select
             fullWidth
             value={editType}

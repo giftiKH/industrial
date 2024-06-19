@@ -1,21 +1,30 @@
 import React from "react";
 import Header from "../component/common/Header";
 import Sidebar from "../component/common/Sidebar";
-import "../index.css";
-// Import the respective components for each page
-import RequestListContent from "../components/RequestListContent";
 
-function RequestListPage() {
+import "../index.css";
+
+import { UserProvider } from "../context/UserContext";
+import TestList from "../component/common/TestList";
+
+
+
+function TestPage() {
   return (
     <div className="layout">
       <Header type="dashboard" />
       <div className="main-content">
-        <Sidebar role="admin" currentPage="/request-list" />
+        <Sidebar currentPage="/users" />
         <div className="content">
-          <RequestListContent />
+          <h1>list testing</h1>
+          <UserProvider>
+            
+           <TestList />
+           
+          </UserProvider>
         </div>
       </div>
     </div>
   );
 }
-export default RequestListPage;
+export default TestPage;

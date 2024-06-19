@@ -13,9 +13,9 @@ function UserPage() {
     <div className="layout">
       <Header type="dashboard" />
       <div className="main-content">
-        <Sidebar role="admin" currentPage="/users" />
+        <Sidebar  currentPage="/users" />
         <div className="content">
-          <h1>all users</h1>
+          <h1>All users</h1>
           <UserProvider>
             <OrganizationProvider>
               <UserList />

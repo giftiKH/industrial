@@ -31,6 +31,8 @@ const textbookRequestSchema = new Schema({
   },
   requestDate: { type: Date, default: Date.now },
   userID: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  year: { type: Number, required: true },
+  submission: { type: Boolean, default: false },
 });
 
 const TextbookRequest = mongoose.model(

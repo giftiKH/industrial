@@ -99,3 +99,26 @@ exports.deleteTextbook = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+exports.addManyTextbooks = async (req, res) => {
+  const { textbooks } = req.body; // Assuming req.body.textbooks is an array of textbook objects
+
+  try {
+    // Use insertMany to insert multiple textbooks at once
+    const insertedTextbooks = await Textbook.insertMany(textbooks);
+
+    res.status(201).json({
+      success: true,
+      message: "Textbooks added successfully",
+      textbooks: insertedTextbooks,
+    });
+  } catch (err) {
+    console.error("Error adding textbooks:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to add textbooks",
+      error: err.message,
+    });
+  }
+};

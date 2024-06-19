@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/users"; // Adjust URL based on your backend API endpoint
+const API_URL = "http://localhost:5000/api/users"; // URL backend API endpoint
 
 const userServices = {
   // User authentication
@@ -20,20 +20,20 @@ const userServices = {
       return response.data;
     } catch (error) {
       console.error("Login error:", error);
-      throw error.response?.data || error.message; // Throw the actual error response or message
+      throw error.response?.data || error.message; 
     }
   },
 
   logout: async () => {
     try {
-      // Clear token from localStorage
+     
       localStorage.removeItem("token");
 
       const response = await axios.post(`${API_URL}/logout`);
       return response.data;
     } catch (error) {
       console.error("Logout error:", error);
-      throw error.response?.data || error.message; // Throw the actual error response or message
+      throw error.response?.data || error.message; 
     }
   },
 

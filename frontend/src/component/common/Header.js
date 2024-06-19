@@ -22,30 +22,42 @@ const Header = ({ type }) => {
     <AppBar position="static" style={{ margin: 0 }}>
       <Toolbar
         style={{
-          flexDirection: type === "dashboard" ? "row" : "column",
+          flexDirection: "column",
           alignItems: "center",
           padding: 0,
         }}
       >
+        <Box
+          sx={{
+            width: "100%",
+            backgroundColor: "#FFFFFF",
+            textAlign: "center",
+            padding: "8px 0",
+          }}
+        >
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ height: 60 }} // Increased the logo size
+          />
+        </Box>
         {type === "dashboard" ? (
-          <>
-            <Box
-              sx={{
-                flexGrow: 1,
-                backgroundColor: theme.palette.primary.main,
-                display: "flex",
-                alignItems: "center",
-                padding: "0 16px",
-              }}
-            >
-              <Typography variant="h6" component="div" sx={{ color: "#fff" }}>
-                Dashboard
-              </Typography>
-            </Box>
+          <Box
+            sx={{
+              width: "100%",
+              backgroundColor: "#07375c", // Changed to #07375c for Dashboard color
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "8px 0",
+            }}
+          >
+            <Typography variant="h6" component="div" sx={{ color: "#fff" }}>
+              Dashboard
+            </Typography>
             <Box
               sx={{
                 marginLeft: "auto",
-                backgroundColor: theme.palette.primary.main,
                 display: "flex",
                 padding: "0 16px",
               }}
@@ -60,43 +72,27 @@ const Header = ({ type }) => {
                 Logout
               </Button>
             </Box>
-          </>
+          </Box>
         ) : (
-          <>
-            <Box
-              sx={{
-                width: "100%",
-                backgroundColor: "#FFFFFF",
-                textAlign: "center",
-                padding: "8px 0",
-              }}
-            >
-              <img
-                src={logo}
-                alt="Logo"
-                style={{ height: 60 }} // Increased the logo size
-              />
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                backgroundColor: theme.palette.primary.main,
-                display: "flex",
-                justifyContent: "center",
-                padding: "8px 0",
-              }}
-            >
-              <Button color="inherit" component={Link} to="/">
-                Login
-              </Button>
-              <Button color="inherit" component={Link} to="/contact">
-                Contact
-              </Button>
-              <Button color="inherit" component={Link} to="/about">
-                About Us
-              </Button>
-            </Box>
-          </>
+          <Box
+            sx={{
+              width: "100%",
+              backgroundColor: theme.palette.primary.main,
+              display: "flex",
+              justifyContent: "center",
+              padding: "8px 0",
+            }}
+          >
+            <Button color="inherit" component={Link} to="/">
+              Login
+            </Button>
+            <Button color="inherit" component={Link} to="/contact">
+              Contact
+            </Button>
+            <Button color="inherit" component={Link} to="/about">
+              About Us
+            </Button>
+          </Box>
         )}
       </Toolbar>
     </AppBar>

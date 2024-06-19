@@ -13,6 +13,7 @@ const distributionRatioRoutes = require("./routes/distributionRatioRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
 const distributionScheduleRoutes = require("./routes/distributionScheduleRoutes");
 const distributionReportRoutes = require("./routes/distributionReportRoutes");
+const emailRoutes = require('./routes/emailRoutes'); // Add this line
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -44,7 +45,7 @@ mongoose
         app.use("/api/invoices", invoiceRoutes);
         app.use("/api/distributionSchedules", distributionScheduleRoutes);
         app.use("/api/distributionReports", distributionReportRoutes);
-      
+        app.use("/api/emails", emailRoutes); // Add this line
 
         // Middleware for logging HTTP requests
         app.use(async (req, res, next) => {

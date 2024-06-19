@@ -7,7 +7,8 @@ function isValidRole(role) {
     "AACEB-staff",
     "admin",
     "sub-city-staff",
-    "school-admin",
+    "private-school-admin",
+    "public-school-admin",
   ];
   return validRoles.includes(role);
 }

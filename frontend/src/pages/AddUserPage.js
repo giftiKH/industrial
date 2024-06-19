@@ -3,8 +3,10 @@ import Header from "../component/common/Header";
 import Sidebar from "../component/common/Sidebar";
 import "../index.css";
 import AddUserForm from "../component/adminComponent/AddUserForm";
-import OrganizationDropdown from "../component/common/OrganizationDropdown";
+//import OrganizationDropdown from "../component/common/OrganizationDropdown";
 import { OrganizationProvider } from "../context/OrganizationContext";
+import { UserProvider } from "../context/UserContext";
+import EmailProvider from "../context/EmailContext";
 
 
 function AddUserPage() {
@@ -15,12 +17,12 @@ function AddUserPage() {
         <Sidebar role="admin" currentPage="/add-user" />
         <div className="content">
           <OrganizationProvider>
-            <OrganizationDropdown />
-            {
-            //<AddUserForm />
-            }
+            <UserProvider>
+              <EmailProvider>
+                <AddUserForm />
+              </EmailProvider>
+            </UserProvider>
           </OrganizationProvider>
-         
         </div>
       </div>
     </div>

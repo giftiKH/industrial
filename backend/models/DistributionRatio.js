@@ -4,9 +4,7 @@ const Schema = mongoose.Schema;
 
 const TextbookSchema = new Schema({
   id: { type: Schema.Types.ObjectId, ref: "Textbook", required: true },
-  forPrivate: { type: Number },
-  forPublic: { type: Number },
-  total: { type: Number, required: true },
+  quantity: { type: Number, required: true },
 });
 
 const RatioSchema = new Schema({
@@ -16,6 +14,7 @@ const RatioSchema = new Schema({
     required: true,
   },
   textbook: [TextbookSchema],
+  
   payment: {
     type: String,
     enum: ["not-required", "paid", "not-paid"],
@@ -27,6 +26,7 @@ const DistributionRatioSchema = new Schema({
   preparedBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
   title: { type: String, required: true },
   date: { type: Date, default: Date.now },
+  year: { type: Number, required: true },
   ratio: [RatioSchema],
 });
 
